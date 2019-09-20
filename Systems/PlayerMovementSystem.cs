@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using PiLedGame.Common;
 using PiLedGame.Components;
 using PiLedGame.Entities;
@@ -9,20 +8,12 @@ namespace PiLedGame.Systems {
 	public sealed class PlayerMovementSystem : ISystem {
 		public void Update(GameState state) {
 			if ( state.Input.Current is ConsoleKey key ) {
-				Move(state.Graphics.Screen, state.Entities.All, key);
+				Move(state.Graphics.Screen, state.Entities, key);
 			}
 		}
 
-		void Move(Screen borders, IReadOnlyCollection<Entity> entities, ConsoleKey key) {
-			foreach ( var entity in entities ) {
-				var position = entity.GetComponent<PositionComponent>();
-				if ( position == null ) {
-					continue;
-				}
-				var control = entity.GetComponent<KeyboardControlComponent>();
-				if ( control == null ) {
-					continue;
-				}
+		void Move(Screen borders, EntitySet entities, ConsoleKey key) {
+			foreach ( var (_, position, _) in entities.Get<PositionComponent, KeyboardControlComponent>() ) {
 				position.Point = Move(borders, position.Point, key);
 			}
 		}

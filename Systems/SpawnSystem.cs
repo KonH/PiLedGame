@@ -13,15 +13,7 @@ namespace PiLedGame.Systems {
 			if ( (direction.X == 0) && (direction.Y == 0) ) {
 				return;
 			}
-			foreach ( var entity in state.Entities.All ) {
-				var source = entity.GetComponent<SpawnSourceComponent>();
-				if ( source == null ) {
-					continue;
-				}
-				var position = entity.GetComponent<PositionComponent>();
-				if ( position == null ) {
-					continue;
-				}
+			foreach ( var (_, _, position) in state.Entities.Get<SpawnSourceComponent, PositionComponent>() ) {
 				Spawn(state.Entities, position.Point, direction);
 			}
 			state.Entities.FlushNewEntities();

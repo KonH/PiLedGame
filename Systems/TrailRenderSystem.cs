@@ -16,15 +16,7 @@ namespace PiLedGame.Systems {
 
 		public void Update(GameState state) {
 			var renderFrame = state.Graphics.Frame;
-			foreach ( var entity in state.Entities.All ) {
-				var trail = entity.GetComponent<TrailComponent>();
-				if ( trail == null ) {
-					continue;
-				}
-				var position = entity.GetComponent<PositionComponent>();
-				if ( position == null ) {
-					continue;
-				}
+			foreach ( var (_, trail, position) in state.Entities.Get<TrailComponent, PositionComponent>() ) {
 				if ( !_history.TryGetValue(trail, out var history) ) {
 					history = new List<Point2D>();
 					_history.Add(trail, history);

@@ -6,15 +6,7 @@ namespace PiLedGame.Systems {
 		public void Update(GameState state) {
 			var graphics = state.Graphics;
 			var frame = graphics.Frame;
-			foreach ( var entity in state.Entities.All ) {
-				var position = entity.GetComponent<PositionComponent>();
-				if ( position == null ) {
-					continue;
-				}
-				var render = entity.GetComponent<RenderComponent>();
-				if ( render == null ) {
-					continue;
-				}
+			foreach ( var (_, position, render) in state.Entities.Get<PositionComponent, RenderComponent>() ) {
 				frame.ChangeAt(position.Point, render.Color);
 			}
 		}
