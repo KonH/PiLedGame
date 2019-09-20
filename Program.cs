@@ -12,14 +12,16 @@ namespace PiLedGame {
 
 			var player = state.Entities.AddEntity();
 			player.AddComponent(new PositionComponent());
-			player.AddComponent(new RenderComponent { Color = Color.Green });
+			player.AddComponent(new RenderComponent(Color.Green));
 			player.AddComponent(new KeyboardControlComponent());
+			player.AddComponent(new TrailComponent(Color.Purple));
 
 			var systems = new SystemSet(
 				new ResetInputSystem(),
 				new ReadInputSystem(),
 				new ClearFrameSystem(),
 				new PlayerMovementSystem(),
+				new TrailRenderSystem(300),
 				new RenderFrameSystem(),
 				new FinishExecutionSystem(),
 				new ConsoleTriggerSystem(),

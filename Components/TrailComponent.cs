@@ -1,10 +1,10 @@
 using System.Drawing;
 
 namespace PiLedGame.Components {
-	public sealed class RenderComponent : IComponent {
+	public sealed class TrailComponent : IComponent {
 		public Color Color;
 
-		public RenderComponent(Color color) {
+		public TrailComponent(Color color) {
 			Color = color;
 		}
 	}
