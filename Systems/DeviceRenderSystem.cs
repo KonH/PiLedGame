@@ -2,7 +2,7 @@ using System;
 using PiLedGame.State;
 using rpi_ws281x;
 
-namespace PiLedGame.System {
+namespace PiLedGame.Systems {
 	public sealed class DeviceRenderSystem : ISystem, IDisposable {
 		readonly Controller _controller;
 		readonly WS281x     _device;
@@ -11,11 +11,18 @@ namespace PiLedGame.System {
 			var screen = state.Graphics.Screen;
 			var settings = Settings.CreateDefaultSettings();
 			var ledCount = screen.Width * screen.Height;
-			_controller = settings.AddController(ledCount, Pin.Gpio18, StripType.WS2812_STRIP);
-			_device = new WS281x(settings);
+			try {
+				_controller = settings.AddController(ledCount, Pin.Gpio18, StripType.WS2812_STRIP);
+				_device = new WS281x(settings);
+			} catch ( DllNotFoundException e ) {
+				state.Debug.Log($"Failed to load device DLL (it's fine for debug): {e.Message}");
+			}
 		}
 
 		public void Update(GameState state) {
+			if ( (_controller == null) || (_device == null) ) {
+				return;
+			}
 			var renderFrame = state.Graphics.RenderFrame;
 			var screen = state.Graphics.Screen;
 			var width = screen.Width;
@@ -30,8 +37,8 @@ namespace PiLedGame.System {
 		}
 
 		public void Dispose() {
-			_device.Reset();
-			_device.Dispose();
+			_device?.Reset();
+			_device?.Dispose();
 		}
 	}
 }

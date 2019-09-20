@@ -1,6 +1,6 @@
 using PiLedGame.State;
 
-namespace PiLedGame.System {
+namespace PiLedGame.Systems {
 	public interface ISystem {
 		void Update(GameState state);
 	}

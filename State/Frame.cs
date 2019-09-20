@@ -1,4 +1,5 @@
 using System.Drawing;
+using PiLedGame.Common;
 
 namespace PiLedGame.State {
 	public sealed class Frame {
@@ -11,6 +12,10 @@ namespace PiLedGame.State {
 		public Color this[int x, int y] {
 			get { return _value[x, y]; }
 			set { _value[x, y] = value; }
+		}
+
+		public void ChangeAt(Point2D position, Color color) {
+			_value[position.X, position.Y] = color;
 		}
 
 		public void Clear() {
