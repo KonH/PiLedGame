@@ -18,9 +18,9 @@ namespace PiLedGame {
 			var systems = new SystemSet(
 				new ResetInputSystem(),
 				new ReadInputSystem(),
-				new ClearWorkFrameSystem(),
+				new ClearFrameSystem(),
 				new PlayerMovementSystem(),
-				new RenderWorkFrameSystem(),
+				new RenderFrameSystem(),
 				new FinishExecutionSystem(),
 				new ConsoleTriggerSystem(),
 				new ConsoleClearSystem(),

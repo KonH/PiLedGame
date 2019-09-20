@@ -23,7 +23,7 @@ namespace PiLedGame.Systems {
 			if ( (_controller == null) || (_device == null) ) {
 				return;
 			}
-			var renderFrame = state.Graphics.RenderFrame;
+			var renderFrame = state.Graphics.Frame;
 			var screen = state.Graphics.Screen;
 			var width = screen.Width;
 			var height = screen.Height;
