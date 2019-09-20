@@ -4,32 +4,12 @@ using PiLedGame.Components;
 
 namespace PiLedGame.Entities {
 	public sealed class EntitySet {
-		List<Entity> _entities        = new List<Entity>();
-		List<Entity> _newEntities     = new List<Entity>();
-		List<Entity> _removedEntities = new List<Entity>();
+		List<Entity> _entities = new List<Entity>();
+		EntityEditor _editor = new EntityEditor();
 
-		public Entity AddEntity() {
-			var entity = new Entity();
-			_newEntities.Add(entity);
-			return entity;
-		}
-
-		public void FlushNewEntities() {
-			foreach ( var entity in _newEntities ) {
-				_entities.Add(entity);
-			}
-			_newEntities.Clear();
-		}
-
-		public void RemoveEntity(Entity entity) {
-			_removedEntities.Add(entity);
-		}
-
-		public void FlushRemovedEntities() {
-			foreach ( var entity in _removedEntities ) {
-				_entities.Remove(entity);
-			}
-			_removedEntities.Clear();
+		public EntityEditor Edit() {
+			_editor.Reset(_entities);
+			return _editor;
 		}
 
 		public List<ValueTuple<Entity, T1>> Get<T1>()

@@ -13,10 +13,11 @@ namespace PiLedGame.Systems {
 			if ( (direction.X == 0) && (direction.Y == 0) ) {
 				return;
 			}
-			foreach ( var (_, _, position) in state.Entities.Get<SpawnSourceComponent, PositionComponent>() ) {
-				Spawn(state.Entities, position.Point, direction);
+			using ( var editor = state.Entities.Edit() ) {
+				foreach ( var (_, _, position) in state.Entities.Get<SpawnSourceComponent, PositionComponent>() ) {
+					Spawn(editor, position.Point, direction);
+				}
 			}
-			state.Entities.FlushNewEntities();
 		}
 
 		Point2D GetDirection(ConsoleKey key) {
@@ -29,8 +30,8 @@ namespace PiLedGame.Systems {
 			}
 		}
 
-		void Spawn(EntitySet entities, Point2D origin, Point2D direction) {
-			var bullet = entities.AddEntity();
+		void Spawn(EntityEditor editor, Point2D origin, Point2D direction) {
+			var bullet = editor.AddEntity();
 			var position = origin + direction;
 			bullet.AddComponent(new PositionComponent(position));
 			bullet.AddComponent(new RenderComponent(Color.Red));

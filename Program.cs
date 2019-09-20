@@ -11,13 +11,13 @@ namespace PiLedGame {
 			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
 			var state = new GameState(graphics, debug);
 
-			var player = state.Entities.AddEntity();
-			player.AddComponent(new PositionComponent(new Point2D(4, 4)));
-			player.AddComponent(new RenderComponent(Color.Green));
-			player.AddComponent(new KeyboardControlComponent());
-			player.AddComponent(new SpawnSourceComponent());
-
-			state.Entities.FlushNewEntities();
+			using ( var editor = state.Entities.Edit() ) {
+				var player = editor.AddEntity();
+				player.AddComponent(new PositionComponent(new Point2D(4, 4)));
+				player.AddComponent(new RenderComponent(Color.Green));
+				player.AddComponent(new KeyboardControlComponent());
+				player.AddComponent(new SpawnSourceComponent());
+			}
 
 			var systems = new SystemSet(
 				new ResetInputSystem(),
