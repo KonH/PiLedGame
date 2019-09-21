@@ -14,7 +14,7 @@ namespace PiLedGame {
 
 			using ( var editor = state.Entities.Edit() ) {
 				var player = editor.AddEntity();
-				player.AddComponent(new PositionComponent(new Point2D(4, 4)));
+				player.AddComponent(new PositionComponent(new Point2D(4, 7)));
 				player.AddComponent(new RenderComponent(Color.Green));
 				player.AddComponent(new KeyboardControlComponent());
 				player.AddComponent(new SpawnComponent(SpawnBullet));
@@ -67,7 +67,7 @@ namespace PiLedGame {
 
 		static void SpawnObstacle(Entity obstacle, Point2D origin, Point2D direction) {
 			obstacle.AddComponent(new PositionComponent(origin + direction));
-			obstacle.AddComponent(new RenderComponent(Color.Yellow));
+			obstacle.AddComponent(new RenderComponent(Color.Indigo));
 			obstacle.AddComponent(new LinearMovementComponent(new Point2D(0, 1), 0.5));
 			obstacle.AddComponent(new OutOfBoundsDestroyComponent());
 			obstacle.AddComponent(new DamageComponent());

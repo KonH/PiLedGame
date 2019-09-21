@@ -19,11 +19,8 @@ namespace PiLedGame.Systems {
 
 		Point2D GetDirection(ConsoleKey key) {
 			switch ( key ) {
-				case ConsoleKey.UpArrow:    return new Point2D(0, -1);
-				case ConsoleKey.DownArrow:  return new Point2D(0, 1);
-				case ConsoleKey.LeftArrow:  return new Point2D(-1, 0);
-				case ConsoleKey.RightArrow: return new Point2D(1, 0);
-				default:                    return new Point2D(0, 0);
+				case ConsoleKey.Spacebar: return new Point2D(0, -1);
+				default:                  return new Point2D(0, 0);
 			}
 		}
 	}

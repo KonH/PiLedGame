@@ -24,10 +24,8 @@ namespace PiLedGame.Systems {
 
 		static Point2D Direction(ConsoleKey key) {
 			switch ( key ) {
-				case ConsoleKey.W: return new Point2D(0, -1);
-				case ConsoleKey.S: return new Point2D(0, 1);
-				case ConsoleKey.A: return new Point2D(-1, 0);
-				case ConsoleKey.D: return new Point2D(1, 0);
+				case ConsoleKey.LeftArrow: return new Point2D(-1, 0);
+				case ConsoleKey.RightArrow: return new Point2D(1, 0);
 			}
 			return default;
 		}
