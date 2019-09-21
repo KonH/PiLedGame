@@ -18,6 +18,13 @@ namespace PiLedGame {
 				player.AddComponent(new RenderComponent(Color.Green));
 				player.AddComponent(new KeyboardControlComponent());
 				player.AddComponent(new SpawnComponent(SpawnBullet));
+
+				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
+					var trigger = editor.AddEntity();
+					trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
+					trigger.AddComponent(new SpawnComponent(SpawnObstacle));
+					trigger.AddComponent(new RandomSpawnComponent(2, 5));
+				}
 			}
 
 			var systems = new SystemSet(
@@ -27,6 +34,7 @@ namespace PiLedGame {
 				new ClearFrameSystem(),
 				new PlayerMovementSystem(),
 				new ShootTriggerSystem(),
+				new RandomSpawnSystem(),
 				new SpawnSystem(),
 				new LinearMovementSystem(),
 				new OutOfBoundsDestroySystem(),
@@ -49,6 +57,13 @@ namespace PiLedGame {
 			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
 			bullet.AddComponent(new LinearMovementComponent(direction, 0.33));
 			bullet.AddComponent(new OutOfBoundsDestroyComponent());
+		}
+
+		static void SpawnObstacle(Entity obstacle, Point2D origin, Point2D direction) {
+			obstacle.AddComponent(new PositionComponent(origin + direction));
+			obstacle.AddComponent(new RenderComponent(Color.Yellow));
+			obstacle.AddComponent(new LinearMovementComponent(new Point2D(0, 1), 0.33));
+			obstacle.AddComponent(new OutOfBoundsDestroyComponent());
 		}
 	}
 }
