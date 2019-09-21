@@ -20,6 +20,7 @@ namespace PiLedGame {
 			}
 
 			var systems = new SystemSet(
+				new WaitForTargetFpsSystem(60),
 				new ResetInputSystem(),
 				new ReadInputSystem(),
 				new ClearFrameSystem(),
