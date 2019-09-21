@@ -35,7 +35,7 @@ namespace PiLedGame.Systems {
 			var position = origin + direction;
 			bullet.AddComponent(new PositionComponent(position));
 			bullet.AddComponent(new RenderComponent(Color.Red));
-			bullet.AddComponent(new TrailComponent(Color.Firebrick));
+			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
 			bullet.AddComponent(new LinearMovementComponent(direction, 0.33));
 			bullet.AddComponent(new OutOfBoundsDestroyComponent());
 		}
