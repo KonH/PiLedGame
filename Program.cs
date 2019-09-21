@@ -27,7 +27,7 @@ namespace PiLedGame {
 				new SpawnSystem(),
 				new LinearMovementSystem(),
 				new OutOfBoundsDestroySystem(),
-				new TrailRenderSystem(300),
+				new TrailRenderSystem(1.5),
 				new RenderFrameSystem(),
 				new FinishExecutionSystem(),
 				new ConsoleTriggerSystem(),

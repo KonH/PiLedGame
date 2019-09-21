@@ -6,33 +6,47 @@ using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class TrailRenderSystem : ISystem {
-		readonly int _frameDepth;
+		struct PositionData {
+			public readonly double  Time;
+			public readonly Point2D Point;
 
-		Dictionary<TrailComponent, List<Point2D>> _history = new Dictionary<TrailComponent, List<Point2D>>();
-
-		public TrailRenderSystem(int frameDepth) {
-			_frameDepth = frameDepth;
-		}
-
-		public void Update(GameState state) {
-			var renderFrame = state.Graphics.Frame;
-			foreach ( var (_, trail, position) in state.Entities.Get<TrailComponent, PositionComponent>() ) {
-				if ( !_history.TryGetValue(trail, out var history) ) {
-					history = new List<Point2D>();
-					_history.Add(trail, history);
-				}
-				history.Add(position.Point);
-				if ( history.Count == _frameDepth ) {
-					history.RemoveAt(0);
-				}
-				RenderTrail(renderFrame, trail.Color, history);
+			public PositionData(double time, Point2D point) {
+				Time  = time;
+				Point = point;
 			}
 		}
 
-		void RenderTrail(Frame frame, Color color, List<Point2D> history) {
-			for ( var i = 0; i < history.Count; i++ ) {
-				var position = history[i];
-				var power = (double)i / history.Count;
+		readonly double _time;
+
+		Dictionary<TrailComponent, List<PositionData>> _history = new Dictionary<TrailComponent, List<PositionData>>();
+
+		public TrailRenderSystem(double time) {
+			_time = time;
+		}
+
+		public void Update(GameState state) {
+			var time = state.Time.TotalTime;
+			var renderFrame = state.Graphics.Frame;
+			foreach ( var (_, trail, position) in state.Entities.Get<TrailComponent, PositionComponent>() ) {
+				if ( !_history.TryGetValue(trail, out var history) ) {
+					history = new List<PositionData>();
+					_history.Add(trail, history);
+				}
+				var point = position.Point;
+				if ( (history.Count == 0) || (history[history.Count -1].Point != point) ) {
+					history.Add(new PositionData(time, point));
+				}
+				if ( history[0].Time < (time - _time) ) {
+					history.RemoveAt(0);
+				}
+				RenderTrail(time, renderFrame, trail.Color, history);
+			}
+		}
+
+		void RenderTrail(double time, Frame frame, Color color, List<PositionData> history) {
+			foreach ( var data in history ) {
+				var position = data.Point;
+				var power = 1 - ((time - data.Time) / _time);
 				frame[position.X, position.Y] = Multiply(color, power);
 			}
 		}
