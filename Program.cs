@@ -3,6 +3,7 @@ using PiLedGame.Common;
 using PiLedGame.State;
 using PiLedGame.Systems;
 using PiLedGame.Components;
+using PiLedGame.Entities;
 
 namespace PiLedGame {
 	class Program {
@@ -16,7 +17,7 @@ namespace PiLedGame {
 				player.AddComponent(new PositionComponent(new Point2D(4, 4)));
 				player.AddComponent(new RenderComponent(Color.Green));
 				player.AddComponent(new KeyboardControlComponent());
-				player.AddComponent(new SpawnSourceComponent());
+				player.AddComponent(new SpawnComponent(SpawnBullet));
 			}
 
 			var systems = new SystemSet(
@@ -25,6 +26,7 @@ namespace PiLedGame {
 				new ReadInputSystem(),
 				new ClearFrameSystem(),
 				new PlayerMovementSystem(),
+				new ShootTriggerSystem(),
 				new SpawnSystem(),
 				new LinearMovementSystem(),
 				new OutOfBoundsDestroySystem(),
@@ -39,6 +41,14 @@ namespace PiLedGame {
 				new DeviceRenderSystem(state)
 			);
 			systems.UpdateLoop(state);
+		}
+
+		static void SpawnBullet(Entity bullet, Point2D origin, Point2D direction) {
+			bullet.AddComponent(new PositionComponent(origin + direction));
+			bullet.AddComponent(new RenderComponent(Color.Red));
+			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
+			bullet.AddComponent(new LinearMovementComponent(direction, 0.33));
+			bullet.AddComponent(new OutOfBoundsDestroyComponent());
 		}
 	}
 }
