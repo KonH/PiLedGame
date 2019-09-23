@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using PiLedGame.Common;
 using PiLedGame.State;
 using PiLedGame.Systems;
@@ -16,16 +17,24 @@ namespace PiLedGame {
 				var player = editor.AddEntity();
 				player.AddComponent(new PositionComponent(new Point2D(4, 6)));
 				player.AddComponent(new RenderComponent(Color.Green));
-				player.AddComponent(new KeyboardControlComponent());
-				player.AddComponent(new SpawnComponent(SpawnBullet));
+				player.AddComponent(new SpawnComponent(SpawnBullet, new Point2D(0, -1)));
 				player.AddComponent(new HealthComponent(health: 3, layer: "player"));
 				player.AddComponent(new PlayerComponent());
+				player.AddComponent(new KeyboardMovementComponent(MovePlayer));
+				player.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Spacebar));
 
 				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
 					var trigger = editor.AddEntity();
 					trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
 					trigger.AddComponent(new SpawnComponent(SpawnObstacle));
 					trigger.AddComponent(new RandomSpawnComponent(2, 5));
+				}
+
+				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
+					var trigger = editor.AddEntity();
+					trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
+					trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, new Point2D(0, -1)));
+					trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
 				}
 			}
 
@@ -67,6 +76,15 @@ namespace PiLedGame {
 			bullet.AddComponent(new DamageComponent(layer: "player"));
 		}
 
+		static void SpawnBonusBullet(Entity bullet, Point2D origin, Point2D direction) {
+			bullet.AddComponent(new PositionComponent(origin + direction));
+			bullet.AddComponent(new RenderComponent(Color.Red));
+			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
+			bullet.AddComponent(new LinearMovementComponent(direction, 0.15));
+			bullet.AddComponent(new OutOfBoundsDestroyComponent());
+			bullet.AddComponent(new DamageComponent(layer: "player", persistent: true));
+		}
+
 		static void SpawnObstacle(Entity obstacle, Point2D origin, Point2D direction) {
 			obstacle.AddComponent(new PositionComponent(origin + direction));
 			obstacle.AddComponent(new RenderComponent(Color.Indigo));
@@ -81,6 +99,14 @@ namespace PiLedGame {
 				return Color.Green;
 			}
 			return (health == 2) ? Color.Yellow : Color.Red;
+		}
+
+		static Point2D MovePlayer(ConsoleKey key) {
+			switch ( key ) {
+				case ConsoleKey.LeftArrow: return new Point2D(-1, 0);
+				case ConsoleKey.RightArrow: return new Point2D(1, 0);
+			}
+			return default;
 		}
 	}
 }

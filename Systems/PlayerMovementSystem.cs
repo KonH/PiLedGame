@@ -1,33 +1,18 @@
-using System;
 using PiLedGame.Common;
 using PiLedGame.Components;
-using PiLedGame.Entities;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class PlayerMovementSystem : ISystem {
 		public void Update(GameState state) {
-			if ( state.Input.Current is ConsoleKey key ) {
-				Move(state.Graphics.Screen, state.Entities, key);
+			foreach ( var (_, position, keyboard) in state.Entities.Get<PositionComponent, KeyboardMovementComponent>() ) {
+				var offset = keyboard.Movement(state.Input.Current);
+				position.Point = Move(state.Graphics.Screen, position.Point, offset);
 			}
 		}
 
-		void Move(Screen borders, EntitySet entities, ConsoleKey key) {
-			foreach ( var (_, position, _) in entities.Get<PositionComponent, KeyboardControlComponent>() ) {
-				position.Point = Move(borders, position.Point, key);
-			}
-		}
-
-		Point2D Move(Screen borders, Point2D point, ConsoleKey key) {
-			return FitInsideBorders(point + Direction(key), borders);
-		}
-
-		static Point2D Direction(ConsoleKey key) {
-			switch ( key ) {
-				case ConsoleKey.LeftArrow: return new Point2D(-1, 0);
-				case ConsoleKey.RightArrow: return new Point2D(1, 0);
-			}
-			return default;
+		Point2D Move(Screen borders, Point2D point, Point2D offset) {
+			return FitInsideBorders(point + offset, borders);
 		}
 
 		static Point2D FitInsideBorders(Point2D point, Screen borders) {

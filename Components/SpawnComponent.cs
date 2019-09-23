@@ -9,8 +9,9 @@ namespace PiLedGame.Components {
 		public bool    ShouldSpawn;
 		public Point2D Direction;
 
-		public SpawnComponent(Action<Entity, Point2D, Point2D> factory) {
-			Factory = factory;
+		public SpawnComponent(Action<Entity, Point2D, Point2D> factory, Point2D direction = default) {
+			Factory   = factory;
+			Direction = direction;
 		}
 	}
 }
