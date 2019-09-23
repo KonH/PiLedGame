@@ -42,6 +42,7 @@ namespace PiLedGame {
 				new DamageSystem(),
 				new NoHealthDestroySystem(),
 				new OutOfBoundsDestroySystem(),
+				new DestroyTriggeredDamageSystem(),
 				new GameOverSystem(),
 				new TrailRenderSystem(),
 				new RenderFrameSystem(),

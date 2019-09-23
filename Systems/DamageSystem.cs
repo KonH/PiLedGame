@@ -18,6 +18,7 @@ namespace PiLedGame.Systems {
 						continue;
 					}
 					health.Health -= damage.Damage;
+					damage.Triggered = true;
 				}
 			}
 		}
