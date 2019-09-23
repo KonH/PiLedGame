@@ -14,11 +14,11 @@ namespace PiLedGame {
 
 			using ( var editor = state.Entities.Edit() ) {
 				var player = editor.AddEntity();
-				player.AddComponent(new PositionComponent(new Point2D(4, 7)));
+				player.AddComponent(new PositionComponent(new Point2D(4, 6)));
 				player.AddComponent(new RenderComponent(Color.Green));
 				player.AddComponent(new KeyboardControlComponent());
 				player.AddComponent(new SpawnComponent(SpawnBullet));
-				player.AddComponent(new HealthComponent(layer: "player"));
+				player.AddComponent(new HealthComponent(health: 3, layer: "player"));
 				player.AddComponent(new PlayerComponent());
 
 				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
@@ -46,6 +46,7 @@ namespace PiLedGame {
 				new GameOverSystem(),
 				new TrailRenderSystem(),
 				new RenderFrameSystem(),
+				new RenderPlayerHealthSystem(new Point2D(0, 7), new Point2D(1, 0), GetColorByHealth),
 				new FinishExecutionSystem(),
 				new ConsoleTriggerSystem(),
 				new ConsoleClearSystem(),
@@ -73,6 +74,13 @@ namespace PiLedGame {
 			obstacle.AddComponent(new OutOfBoundsDestroyComponent());
 			obstacle.AddComponent(new DamageComponent());
 			obstacle.AddComponent(new HealthComponent());
+		}
+
+		static Color GetColorByHealth(int health) {
+			if ( health >= 3 ) {
+				return Color.Green;
+			}
+			return (health == 2) ? Color.Yellow : Color.Red;
 		}
 	}
 }
