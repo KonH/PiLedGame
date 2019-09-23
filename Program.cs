@@ -17,7 +17,7 @@ namespace PiLedGame {
 				var player = editor.AddEntity();
 				player.AddComponent(new PositionComponent(new Point2D(4, 6)));
 				player.AddComponent(new RenderComponent(Color.Green));
-				player.AddComponent(new SpawnComponent(SpawnBullet, new Point2D(0, -1)));
+				player.AddComponent(new SpawnComponent(SpawnBullet, Point2D.Up));
 				player.AddComponent(new HealthComponent(health: 3, layer: "player"));
 				player.AddComponent(new PlayerComponent());
 				player.AddComponent(new KeyboardMovementComponent(MovePlayer));
@@ -33,7 +33,7 @@ namespace PiLedGame {
 				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
 					var trigger = editor.AddEntity();
 					trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
-					trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, new Point2D(0, -1)));
+					trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, Point2D.Up));
 					trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
 				}
 			}
@@ -55,7 +55,7 @@ namespace PiLedGame {
 				new GameOverSystem(),
 				new TrailRenderSystem(),
 				new RenderFrameSystem(),
-				new RenderPlayerHealthSystem(new Point2D(0, 7), new Point2D(1, 0), GetColorByHealth),
+				new RenderPlayerHealthSystem(new Point2D(0, 7), Point2D.Right, GetColorByHealth),
 				new FinishExecutionSystem(),
 				new ConsoleTriggerSystem(),
 				new ConsoleClearSystem(),
@@ -88,7 +88,7 @@ namespace PiLedGame {
 		static void SpawnObstacle(Entity obstacle, Point2D origin, Point2D direction) {
 			obstacle.AddComponent(new PositionComponent(origin + direction));
 			obstacle.AddComponent(new RenderComponent(Color.Indigo));
-			obstacle.AddComponent(new LinearMovementComponent(new Point2D(0, 1), 0.5));
+			obstacle.AddComponent(new LinearMovementComponent(Point2D.Down, 0.5));
 			obstacle.AddComponent(new OutOfBoundsDestroyComponent());
 			obstacle.AddComponent(new DamageComponent());
 			obstacle.AddComponent(new HealthComponent());
@@ -103,8 +103,8 @@ namespace PiLedGame {
 
 		static Point2D MovePlayer(ConsoleKey key) {
 			switch ( key ) {
-				case ConsoleKey.LeftArrow: return new Point2D(-1, 0);
-				case ConsoleKey.RightArrow: return new Point2D(1, 0);
+				case ConsoleKey.LeftArrow: return Point2D.Left;
+				case ConsoleKey.RightArrow: return Point2D.Right;
 			}
 			return default;
 		}

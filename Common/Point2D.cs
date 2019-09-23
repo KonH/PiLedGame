@@ -1,5 +1,11 @@
 namespace PiLedGame.Common {
 	public struct Point2D {
+		public static Point2D Zero  => new Point2D(0, 0);
+		public static Point2D Up    => new Point2D(0, -1);
+		public static Point2D Down  => new Point2D(0, 1);
+		public static Point2D Left  => new Point2D(-1, 0);
+		public static Point2D Right => new Point2D(1, 0);
+
 		public bool IsEmpty => (X == 0) && (Y == 0);
 
 		public readonly int X;
