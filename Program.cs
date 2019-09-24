@@ -112,7 +112,7 @@ namespace PiLedGame {
 				new ConsoleRenderSystem(),
 				new ConsoleLogSystem(),
 				new FinishFrameSystem(),
-				new DeviceRenderSystem(state)
+				new DeviceRenderSystem(state, 172)
 			);
 		}
 

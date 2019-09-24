@@ -7,12 +7,13 @@ namespace PiLedGame.Systems {
 		readonly Controller _controller;
 		readonly WS281x     _device;
 
-		public DeviceRenderSystem(GameState state) {
+		public DeviceRenderSystem(GameState state, byte brightness = 255) {
 			var screen = state.Graphics.Screen;
 			var settings = Settings.CreateDefaultSettings();
 			var ledCount = screen.Width * screen.Height;
 			try {
-				_controller = settings.AddController(ledCount, Pin.Gpio18, StripType.WS2812_STRIP);
+				_controller = settings.AddController(
+					ledCount, Pin.Gpio18, StripType.WS2812_STRIP, brightness: brightness);
 				_device = new WS281x(settings);
 			} catch ( DllNotFoundException e ) {
 				state.Debug.Log($"Failed to load device DLL (it's fine for debug): {e.Message}");
