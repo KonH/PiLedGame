@@ -4,8 +4,8 @@ namespace PiLedGame.Components {
 	public sealed class InventoryComponent : IComponent {
 		Dictionary<string, int> _items = new Dictionary<string, int>();
 
-		public void AddItem(string type) {
-			_items[type] = _items.GetValueOrDefault(type) + 1;
+		public void AddItem(string type, int count) {
+			_items[type] = _items.GetValueOrDefault(type) + count;
 		}
 
 		public bool TryGetItem(string type) {

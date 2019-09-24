@@ -10,6 +10,7 @@ namespace PiLedGame {
 	class Program {
 		const string PlayerLayer = "player";
 		const string HealthItem  = "health";
+		const string BonusItem   = "bonus";
 
 		static void Main(string[] args) {
 			var graphics = new Graphics(new Screen(8, 8));
@@ -27,6 +28,7 @@ namespace PiLedGame {
 				AddBonusBulletSpawners(editor, width);
 				AddObstacleSpawners(editor, width);
 				AddHealthSpawners(editor, width);
+				AddBonusSpawners(editor, width);
 			}
 		}
 
@@ -55,7 +57,7 @@ namespace PiLedGame {
 			for ( var i = 0; i < width; i++ ) {
 				var trigger = editor.AddEntity();
 				trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
-				trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, direction: Point2D.Up));
+				trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, condition: TryGetBonus, direction: Point2D.Up));
 				trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
 			}
 		}
@@ -65,6 +67,15 @@ namespace PiLedGame {
 				var trigger = editor.AddEntity();
 				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
 				trigger.AddComponent(new SpawnComponent(SpawnHealth, condition: IsPlayerNeedsHealth));
+				trigger.AddComponent(new RandomSpawnComponent(10, 30));
+			}
+		}
+
+		static void AddBonusSpawners(EntityEditor editor, int width) {
+			for ( var i = 0; i < width; i++ ) {
+				var trigger = editor.AddEntity();
+				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
+				trigger.AddComponent(new SpawnComponent(SpawnBonus));
 				trigger.AddComponent(new RandomSpawnComponent(10, 30));
 			}
 		}
@@ -136,6 +147,14 @@ namespace PiLedGame {
 			health.AddComponent(new ItemComponent(HealthItem));
 		}
 
+		static void SpawnBonus(Entity bonus, Point2D origin, Point2D direction) {
+			bonus.AddComponent(new PositionComponent(origin + direction));
+			bonus.AddComponent(new RenderComponent(Color.Red));
+			bonus.AddComponent(new LinearMovementComponent(Point2D.Down, 0.75));
+			bonus.AddComponent(new OutOfBoundsDestroyComponent());
+			bonus.AddComponent(new ItemComponent(BonusItem, 8));
+		}
+
 		static Color GetColorByHealth(int health) {
 			if ( health >= 3 ) {
 				return Color.Green;
@@ -165,6 +184,15 @@ namespace PiLedGame {
 			if ( health != null ) {
 				health.Health++;
 			}
+		}
+
+		static bool TryGetBonus(GameState state) {
+			foreach ( var (_, inventory) in state.Entities.Get<InventoryComponent>() ) {
+				if ( inventory.TryGetItem(BonusItem) ) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace PiLedGame.Systems {
 				if ( keyboard.Trigger != key ) {
 					continue;
 				}
-				trigger.ShouldSpawn = true;
+				trigger.ShouldSpawn = trigger.Condition(state);
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace PiLedGame.Systems {
 						continue;
 					}
 					item.IsCollected = true;
-					inventory.AddItem(item.Type);
+					inventory.AddItem(item.Type, item.Count);
 					break;
 				}
 			}
