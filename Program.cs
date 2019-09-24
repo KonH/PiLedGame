@@ -16,9 +16,11 @@ namespace PiLedGame {
 			var graphics = new Graphics(new Screen(8, 8));
 			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
 			var state = new GameState(graphics, debug);
-			var systems = CreateSystems(state);
+			var scoreMeasure = new ScoreMeasureSystem();
+			var systems = CreateSystems(state, scoreMeasure);
 			InitStartupEntities(state);
 			systems.UpdateLoop(state);
+			Console.WriteLine($"Your score is: {scoreMeasure.TotalScore}");
 		}
 
 		static void InitStartupEntities(GameState state) {
@@ -80,7 +82,7 @@ namespace PiLedGame {
 			}
 		}
 
-		static SystemSet CreateSystems(GameState state) {
+		static SystemSet CreateSystems(GameState state, ScoreMeasureSystem scoreMeasure) {
 			return new SystemSet(
 				new WaitForTargetFpsSystem(60),
 				new ResetInputSystem(),
@@ -94,6 +96,7 @@ namespace PiLedGame {
 				new DamageSystem(),
 				new CollectItemSystem(),
 				new UseItemSystem(HealthItem, ApplyHealth),
+				scoreMeasure,
 				new DestroyCollectedItemSystem(),
 				new NoHealthDestroySystem(),
 				new OutOfBoundsDestroySystem(),
