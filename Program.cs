@@ -12,7 +12,12 @@ namespace PiLedGame {
 			var graphics = new Graphics(new Screen(8, 8));
 			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
 			var state = new GameState(graphics, debug);
+			var systems = CreateSystems(state);
+			InitStartupEntities(state);
+			systems.UpdateLoop(state);
+		}
 
+		static void InitStartupEntities(GameState state) {
 			using ( var editor = state.Entities.Edit() ) {
 				var player = editor.AddEntity();
 				player.AddComponent(new PositionComponent(new Point2D(4, 6)));
@@ -23,22 +28,24 @@ namespace PiLedGame {
 				player.AddComponent(new KeyboardMovementComponent(MovePlayer));
 				player.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Spacebar));
 
-				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
+				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
 					var trigger = editor.AddEntity();
 					trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
 					trigger.AddComponent(new SpawnComponent(SpawnObstacle));
 					trigger.AddComponent(new RandomSpawnComponent(2, 5));
 				}
 
-				for ( var i = 0; i < graphics.Screen.Width; i++ ) {
+				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
 					var trigger = editor.AddEntity();
 					trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
 					trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, Point2D.Up));
 					trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
 				}
 			}
+		}
 
-			var systems = new SystemSet(
+		static SystemSet CreateSystems(GameState state) {
+			return new SystemSet(
 				new WaitForTargetFpsSystem(60),
 				new ResetInputSystem(),
 				new ReadInputSystem(),
@@ -64,7 +71,6 @@ namespace PiLedGame {
 				new FinishFrameSystem(),
 				new DeviceRenderSystem(state)
 			);
-			systems.UpdateLoop(state);
 		}
 
 		static void SpawnBullet(Entity bullet, Point2D origin, Point2D direction) {
