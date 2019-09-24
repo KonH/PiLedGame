@@ -69,7 +69,7 @@ namespace PiLedGame {
 				var trigger = editor.AddEntity();
 				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
 				trigger.AddComponent(new SpawnComponent(SpawnHealth, condition: IsPlayerNeedsHealth));
-				trigger.AddComponent(new RandomSpawnComponent(10, 30));
+				trigger.AddComponent(new RandomSpawnComponent(20, 40));
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace PiLedGame {
 				var trigger = editor.AddEntity();
 				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
 				trigger.AddComponent(new SpawnComponent(SpawnBonus));
-				trigger.AddComponent(new RandomSpawnComponent(10, 30));
+				trigger.AddComponent(new RandomSpawnComponent(25, 70));
 			}
 		}
 
