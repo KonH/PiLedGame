@@ -89,7 +89,7 @@ namespace PiLedGame.Systems {
 		void Render(double time, Frame frame) {
 			foreach ( var (_, data) in _data ) {
 				foreach ( var pos in data.Positions ) {
-					frame[pos.Point.X, pos.Point.Y] = data.CalculateAt(time, pos);
+					frame.ChangeAt(pos.Point, data.CalculateAt(time, pos));
 				}
 			}
 		}

@@ -11,11 +11,19 @@ namespace PiLedGame.State {
 
 		public Color this[int x, int y] {
 			get { return _value[x, y]; }
-			set { _value[x, y] = value; }
+			private set { _value[x, y] = value; }
 		}
 
 		public void ChangeAt(Point2D position, Color color) {
-			_value[position.X, position.Y] = color;
+			var x = position.X;
+			var y = position.Y;
+			if ( (x < 0) || (x >= _value.GetLength(0)) ) {
+				return;
+			}
+			if ( (y < 0) || (y >= _value.GetLength(1)) ) {
+				return;
+			}
+			_value[x, y] = color;
 		}
 
 		public void Clear() {

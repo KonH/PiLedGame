@@ -19,7 +19,7 @@ namespace PiLedGame.Systems {
 				}
 				if ( randomSpawn.Timer >= randomSpawn.Interval ) {
 					UpdateSpawner(randomSpawn);
-					spawn.ShouldSpawn = true;
+					spawn.ShouldSpawn = spawn.Condition(state);
 				}
 			}
 		}
@@ -40,7 +40,7 @@ namespace PiLedGame.Systems {
 					continue;
 				}
 				if ( spawnPosition.Point == position.Point ) {
-					return true;
+					return e.GetComponent<RenderComponent>() != null;
 				}
 			}
 			return false;

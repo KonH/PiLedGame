@@ -8,6 +8,9 @@ using PiLedGame.Entities;
 
 namespace PiLedGame {
 	class Program {
+		const string PlayerLayer = "player";
+		const string HealthItem  = "health";
+
 		static void Main(string[] args) {
 			var graphics = new Graphics(new Screen(8, 8));
 			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
@@ -19,28 +22,50 @@ namespace PiLedGame {
 
 		static void InitStartupEntities(GameState state) {
 			using ( var editor = state.Entities.Edit() ) {
-				var player = editor.AddEntity();
-				player.AddComponent(new PositionComponent(new Point2D(4, 6)));
-				player.AddComponent(new RenderComponent(Color.Green));
-				player.AddComponent(new SpawnComponent(SpawnBullet, Point2D.Up));
-				player.AddComponent(new HealthComponent(health: 3, layer: "player"));
-				player.AddComponent(new PlayerComponent());
-				player.AddComponent(new KeyboardMovementComponent(MovePlayer));
-				player.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Spacebar));
+				AddPlayer(editor);
+				var width = state.Graphics.Screen.Width;
+				AddBonusBulletSpawners(editor, width);
+				AddObstacleSpawners(editor, width);
+				AddHealthSpawners(editor, width);
+			}
+		}
 
-				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
-					var trigger = editor.AddEntity();
-					trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
-					trigger.AddComponent(new SpawnComponent(SpawnObstacle));
-					trigger.AddComponent(new RandomSpawnComponent(2, 5));
-				}
+		static void AddPlayer(EntityEditor editor) {
+			var player = editor.AddEntity();
+			player.AddComponent(new PositionComponent(new Point2D(4, 6)));
+			player.AddComponent(new RenderComponent(Color.Green));
+			player.AddComponent(new SpawnComponent(SpawnBullet, direction: Point2D.Up));
+			player.AddComponent(new HealthComponent(health: 3, layer: PlayerLayer));
+			player.AddComponent(new PlayerComponent());
+			player.AddComponent(new KeyboardMovementComponent(MovePlayer));
+			player.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Spacebar));
+			player.AddComponent(new InventoryComponent());
+		}
 
-				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
-					var trigger = editor.AddEntity();
-					trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
-					trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, Point2D.Up));
-					trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
-				}
+		static void AddObstacleSpawners(EntityEditor editor, int width) {
+			for ( var i = 0; i < width; i++ ) {
+				var trigger = editor.AddEntity();
+				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
+				trigger.AddComponent(new SpawnComponent(SpawnObstacle));
+				trigger.AddComponent(new RandomSpawnComponent(2, 5));
+			}
+		}
+
+		static void AddBonusBulletSpawners(EntityEditor editor, int width) {
+			for ( var i = 0; i < width; i++ ) {
+				var trigger = editor.AddEntity();
+				trigger.AddComponent(new PositionComponent(new Point2D(i, 7)));
+				trigger.AddComponent(new SpawnComponent(SpawnBonusBullet, direction: Point2D.Up));
+				trigger.AddComponent(new KeyboardSpawnComponent(ConsoleKey.Z));
+			}
+		}
+
+		static void AddHealthSpawners(EntityEditor editor, int width) {
+			for ( var i = 0; i < width; i++ ) {
+				var trigger = editor.AddEntity();
+				trigger.AddComponent(new PositionComponent(new Point2D(i, 0)));
+				trigger.AddComponent(new SpawnComponent(SpawnHealth, condition: IsPlayerNeedsHealth));
+				trigger.AddComponent(new RandomSpawnComponent(10, 30));
 			}
 		}
 
@@ -56,6 +81,9 @@ namespace PiLedGame {
 				new SpawnSystem(),
 				new LinearMovementSystem(),
 				new DamageSystem(),
+				new CollectItemSystem(),
+				new UseItemSystem(HealthItem, ApplyHealth),
+				new DestroyCollectedItemSystem(),
 				new NoHealthDestroySystem(),
 				new OutOfBoundsDestroySystem(),
 				new DestroyTriggeredDamageSystem(),
@@ -79,7 +107,7 @@ namespace PiLedGame {
 			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
 			bullet.AddComponent(new LinearMovementComponent(direction, 0.33));
 			bullet.AddComponent(new OutOfBoundsDestroyComponent());
-			bullet.AddComponent(new DamageComponent(layer: "player"));
+			bullet.AddComponent(new DamageComponent(layer: PlayerLayer));
 		}
 
 		static void SpawnBonusBullet(Entity bullet, Point2D origin, Point2D direction) {
@@ -88,7 +116,7 @@ namespace PiLedGame {
 			bullet.AddComponent(new TrailComponent(1.5, Color.Firebrick));
 			bullet.AddComponent(new LinearMovementComponent(direction, 0.15));
 			bullet.AddComponent(new OutOfBoundsDestroyComponent());
-			bullet.AddComponent(new DamageComponent(layer: "player", persistent: true));
+			bullet.AddComponent(new DamageComponent(layer: PlayerLayer, persistent: true));
 		}
 
 		static void SpawnObstacle(Entity obstacle, Point2D origin, Point2D direction) {
@@ -98,6 +126,14 @@ namespace PiLedGame {
 			obstacle.AddComponent(new OutOfBoundsDestroyComponent());
 			obstacle.AddComponent(new DamageComponent());
 			obstacle.AddComponent(new HealthComponent());
+		}
+
+		static void SpawnHealth(Entity health, Point2D origin, Point2D direction) {
+			health.AddComponent(new PositionComponent(origin + direction));
+			health.AddComponent(new RenderComponent(Color.Green));
+			health.AddComponent(new LinearMovementComponent(Point2D.Down, 0.75));
+			health.AddComponent(new OutOfBoundsDestroyComponent());
+			health.AddComponent(new ItemComponent(HealthItem));
 		}
 
 		static Color GetColorByHealth(int health) {
@@ -113,6 +149,22 @@ namespace PiLedGame {
 				case ConsoleKey.RightArrow: return Point2D.Right;
 			}
 			return default;
+		}
+
+		static bool IsPlayerNeedsHealth(GameState state) {
+			foreach ( var (_, _, health) in state.Entities.Get<PlayerComponent, HealthComponent>() ) {
+				if ( health.Health < 3 ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		static void ApplyHealth(Entity player) {
+			var health = player.GetComponent<HealthComponent>();
+			if ( health != null ) {
+				health.Health++;
+			}
 		}
 	}
 }

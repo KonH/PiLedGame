@@ -16,12 +16,16 @@ namespace PiLedGame.Common {
 			Y = y;
 		}
 
+		public override string ToString() {
+			return $"({X}, {Y})";
+		}
+
 		public bool Equals(Point2D other) {
-			return X == other.X && Y == other.Y;
+			return (X == other.X) && (Y == other.Y);
 		}
 
 		public override bool Equals(object obj) {
-			return obj is Point2D other && Equals(other);
+			return (obj is Point2D other) && Equals(other);
 		}
 
 		public override int GetHashCode() {
