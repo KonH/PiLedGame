@@ -85,6 +85,7 @@ namespace PiLedGame {
 		static SystemSet CreateSystems(GameState state, ScoreMeasureSystem scoreMeasure) {
 			return new SystemSet(
 				new WaitForTargetFpsSystem(60),
+				new SpeedUpSystem(10.0, 0.25),
 				new ResetInputSystem(),
 				new ReadInputSystem(),
 				new ClearFrameSystem(),

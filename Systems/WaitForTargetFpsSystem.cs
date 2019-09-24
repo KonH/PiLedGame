@@ -10,7 +10,7 @@ namespace PiLedGame.Systems {
 		}
 
 		public void Update(GameState state) {
-			var dt = state.Time.DeltaTime;
+			var dt = state.Time.UnscaledDeltaTime;
 			var lag = _targetTime - dt;
 			if ( lag > 0 ) {
 				Thread.Sleep((int)(lag / 1000));
