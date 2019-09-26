@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace PiLedGame.State {
 	public sealed class Time {
 		public double UnscaledTotalTime { get; private set; }
@@ -8,15 +6,9 @@ namespace PiLedGame.State {
 		public double DeltaTime         { get; private set; }
 		public double TimeScale         { get; set; } = 1.0;
 
-		Stopwatch _frameTimer = null;
-
-		public Time() {
-			_frameTimer = Stopwatch.StartNew();
-		}
-
-		public void UpdateFrameTime() {
+		public void UpdateFrameTime(double totalSeconds) {
 			var prevTotalTime = UnscaledTotalTime;
-			UnscaledTotalTime = _frameTimer.Elapsed.TotalSeconds;
+			UnscaledTotalTime = totalSeconds;
 			UnscaledDeltaTime = (UnscaledTotalTime - prevTotalTime);
 			DeltaTime = UnscaledDeltaTime * TimeScale;
 			TotalTime += DeltaTime;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using PiLedGame.Common;
 using PiLedGame.State;
@@ -6,9 +7,14 @@ using PiLedGame.Systems;
 using PiLedGame.Components;
 using PiLedGame.Entities;
 using PiLedGame.Events;
+using Debug = PiLedGame.State.Debug;
 
 namespace PiLedGame {
 	class Program {
+		static bool UseReplay {
+			get { return true; }
+		}
+
 		const string PlayerLayer = "player";
 		const string Bullet      = "bullet";
 		const string BonusBullet = "bonusBullet";
@@ -19,12 +25,20 @@ namespace PiLedGame {
 		static void Main(string[] args) {
 			var graphics = new Graphics(new Screen(8, 8));
 			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
-			var state = new GameState(graphics, debug);
+			var random = UseReplay ? new Random(0) : new Random();
+			var state = new GameState(graphics, debug, random);
 			var scoreMeasure = new ScoreMeasureSystem();
-			var systems = CreateSystems(state, scoreMeasure);
+			var timer = new Stopwatch();
+			var record = GetInputRecord();
+			var systems = CreateSystems(state, timer, scoreMeasure, record);
 			InitStartupEntities(state);
+			timer.Start();
 			systems.UpdateLoop(state);
 			Console.WriteLine($"Your score is: {scoreMeasure.TotalScore}");
+			Console.WriteLine($"Time: {state.Time.UnscaledTotalTime:0.00}");
+			foreach ( var frame in record.Frames ) {
+				Console.WriteLine($"new InputFrame({frame.Time}, ConsoleKey.{frame.Key}),");
+			}
 		}
 
 		static void InitStartupEntities(GameState state) {
@@ -87,12 +101,13 @@ namespace PiLedGame {
 			}
 		}
 
-		static SystemSet CreateSystems(GameState state, ScoreMeasureSystem scoreMeasure) {
+		static SystemSet CreateSystems(GameState state, Stopwatch timer, ScoreMeasureSystem scoreMeasure, InputRecord record) {
 			return new SystemSet(
 				new WaitForTargetFpsSystem(60),
 				new SpeedUpSystem(10.0, 0.25),
 				new ResetInputSystem(),
-				new ReadInputSystem(),
+				UseReplay ? new FixedInputSystem(record) as ISystem : new ReadConsoleInputSystem(),
+				new SaveInputSystem(record),
 				new ClearFrameSystem(),
 				new KeyboardMovementSystem(MovePlayer),
 				new InitRandomSpawnTimerSystem(),
@@ -135,7 +150,7 @@ namespace PiLedGame {
 				new ConsoleClearSystem(),
 				new ConsoleRenderSystem(),
 				new ConsoleLogSystem(),
-				new FinishFrameSystem(),
+				UseReplay ? new FinishFrameFixedTimeSystem(0.0005) as ISystem : new FinishFrameRealTimeSystem(timer),
 				new DeviceRenderSystem(state, 172),
 				new CleanUpEventSystem()
 			);
@@ -203,6 +218,38 @@ namespace PiLedGame {
 				case ConsoleKey.RightArrow: return Point2D.Right;
 			}
 			return default;
+		}
+
+		static InputRecord GetInputRecord() {
+			return new InputRecord(
+				new InputFrame(3.63800000000038, ConsoleKey.Spacebar),
+				new InputFrame(7.73149999999843, ConsoleKey.RightArrow),
+				new InputFrame(8.84649999999932, ConsoleKey.Spacebar),
+				new InputFrame(11.0850000000021, ConsoleKey.Spacebar),
+				new InputFrame(11.864500000003, ConsoleKey.LeftArrow),
+				new InputFrame(12.3660000000036, ConsoleKey.Spacebar),
+				new InputFrame(14.0425000000057, ConsoleKey.RightArrow),
+				new InputFrame(14.2690000000059, ConsoleKey.Spacebar),
+				new InputFrame(17.2490000000052, ConsoleKey.Spacebar),
+				new InputFrame(18.2820000000027, ConsoleKey.RightArrow),
+				new InputFrame(18.8690000000014, ConsoleKey.Spacebar),
+				new InputFrame(20.1774999999983, ConsoleKey.LeftArrow),
+				new InputFrame(20.5139999999975, ConsoleKey.Spacebar),
+				new InputFrame(21.163999999996, ConsoleKey.RightArrow),
+				new InputFrame(22.3869999999932, ConsoleKey.Spacebar),
+				new InputFrame(23.7249999999901, ConsoleKey.RightArrow),
+				new InputFrame(27.8554999999804, ConsoleKey.LeftArrow),
+				new InputFrame(28.2464999999795, ConsoleKey.LeftArrow),
+				new InputFrame(28.5299999999789, ConsoleKey.LeftArrow),
+				new InputFrame(28.905999999978, ConsoleKey.Spacebar),
+				new InputFrame(30.4394999999744, ConsoleKey.Spacebar),
+				new InputFrame(31.6899999999715, ConsoleKey.Spacebar),
+				new InputFrame(32.4974999999731, ConsoleKey.LeftArrow),
+				new InputFrame(33.5829999999783, ConsoleKey.Spacebar),
+				new InputFrame(36.3724999999916, ConsoleKey.Spacebar),
+				new InputFrame(37.6144999999976, ConsoleKey.Spacebar),
+				new InputFrame(38.7215000000029, ConsoleKey.RightArrow),
+				new InputFrame(40.7860000000127, ConsoleKey.Spacebar));
 		}
 	}
 }
