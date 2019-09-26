@@ -3,16 +3,11 @@ using PiLedGame.Components;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
-	public sealed class PlayerMovementSystem : ISystem {
+	public sealed class FitInsideScreenSystem : ISystem {
 		public void Update(GameState state) {
-			foreach ( var (_, position, keyboard) in state.Entities.Get<PositionComponent, KeyboardMovementComponent>() ) {
-				var offset = keyboard.Movement(state.Input.Current);
-				position.Point = Move(state.Graphics.Screen, position.Point, offset);
+			foreach ( var (_, _, pos) in state.Entities.Get<FitInsideScreenComponent, PositionComponent>() ) {
+				pos.Point = FitInsideBorders(pos.Point, state.Graphics.Screen);
 			}
-		}
-
-		Point2D Move(Screen borders, Point2D point, Point2D offset) {
-			return FitInsideBorders(point + offset, borders);
 		}
 
 		static Point2D FitInsideBorders(Point2D point, Screen borders) {

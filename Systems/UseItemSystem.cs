@@ -1,22 +1,19 @@
-using System;
 using PiLedGame.Components;
-using PiLedGame.Entities;
+using PiLedGame.Events;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
-	public sealed class UseItemSystem : ISystem {
-		readonly string         _type;
-		readonly Action<Entity> _onUse;
+	public sealed class UseItemSystem<T> : ISystem where T : IEvent, new() {
+		readonly string _type;
 
-		public UseItemSystem(string type, Action<Entity> onUse) {
+		public UseItemSystem(string type) {
 			_type  = type;
-			_onUse = onUse;
 		}
 
 		public void Update(GameState state) {
 			foreach ( var (entity, inv) in state.Entities.Get<InventoryComponent>() ) {
 				if ( inv.TryGetItem(_type) ) {
-					_onUse(entity);
+					entity.AddComponent(new T());
 				}
 			}
 		}

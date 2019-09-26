@@ -12,6 +12,10 @@ namespace PiLedGame.Entities {
 			return _editor;
 		}
 
+		public List<Entity> Get() {
+			return new List<Entity>(_entities);
+		}
+
 		public List<ValueTuple<Entity, T1>> Get<T1>()
 			where T1 : class, IComponent {
 			var result = new List<ValueTuple<Entity, T1>>();

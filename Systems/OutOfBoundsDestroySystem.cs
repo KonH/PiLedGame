@@ -1,4 +1,5 @@
 using PiLedGame.Components;
+using PiLedGame.Events;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
@@ -7,12 +8,10 @@ namespace PiLedGame.Systems {
 			var screen = state.Graphics.Screen;
 			var width = screen.Width;
 			var height = screen.Height;
-			using ( var editor = state.Entities.Edit() ) {
-				foreach ( var (entity, _, position) in state.Entities.Get<OutOfBoundsDestroyComponent, PositionComponent>() ) {
-					var point = position.Point;
-					if ( (point.X < 0) || (point.X >= width) || (point.Y < 0) || (point.Y >= height) ) {
-						editor.RemoveEntity(entity);
-					}
+			foreach ( var (entity, _, position) in state.Entities.Get<OutOfBoundsDestroyComponent, PositionComponent>() ) {
+				var point = position.Point;
+				if ( (point.X < 0) || (point.X >= width) || (point.Y < 0) || (point.Y >= height) ) {
+					entity.AddComponent(new DestroyEvent());
 				}
 			}
 		}

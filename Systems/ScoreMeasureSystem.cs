@@ -1,5 +1,6 @@
 using PiLedGame.Components;
 using PiLedGame.Entities;
+using PiLedGame.Events;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
@@ -13,8 +14,8 @@ namespace PiLedGame.Systems {
 
 		int GetDestroyedUnits(EntitySet entities) {
 			var accum = 0;
-			foreach ( var (_, health) in entities.Get<HealthComponent>() ) {
-				if ( (health.Health == 0) && (health.Layer == null) ) {
+			foreach ( var (_, health, _) in entities.Get<HealthComponent, DestroyEvent>() ) {
+				if ( health.Layer == null ) {
 					accum++;
 				}
 			}
@@ -23,10 +24,8 @@ namespace PiLedGame.Systems {
 
 		int GetCollectedItems(EntitySet entities) {
 			var accum = 0;
-			foreach ( var (_, item) in entities.Get<ItemComponent>() ) {
-				if ( item.IsCollected ) {
-					accum++;
-				}
+			foreach ( var (_, _) in entities.Get<AddItemEvent>() ) {
+				accum++;
 			}
 			return accum;
 		}
