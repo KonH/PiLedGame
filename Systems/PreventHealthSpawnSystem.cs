@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PiLedGame.Common;
 using PiLedGame.Components;
 using PiLedGame.Entities;
 using PiLedGame.Events;
@@ -7,11 +8,11 @@ using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class PreventHealthSpawnSystem : ISystem {
-		readonly string _requestId;
-		readonly int    _minHealth;
+		readonly SpawnRequestType _request;
+		readonly int              _minHealth;
 
-		public PreventHealthSpawnSystem(string requestId, int minHealth) {
-			_requestId = requestId;
+		public PreventHealthSpawnSystem(SpawnRequestType request, int minHealth) {
+			_request   = request;
 			_minHealth = minHealth;
 		}
 
@@ -20,7 +21,7 @@ namespace PiLedGame.Systems {
 				return;
 			}
 			foreach ( var (entity, ev) in state.Entities.Get<SpawnEvent>() ) {
-				if ( ev.RequestId == _requestId ) {
+				if ( ev.Request == _request ) {
 					entity.RemoveComponent(ev);
 				}
 			}

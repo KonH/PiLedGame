@@ -9,12 +9,16 @@ using PiLedGame.Systems;
 
 namespace PiLedGame {
 	public static class GameLogic {
-		const string PlayerLayer = "player";
-		const string Bullet      = "bullet";
-		const string BonusBullet = "bonusBullet";
-		const string Obstacle    = "obstacle";
-		const string HealthItem  = "health";
-		const string BonusItem   = "bonus";
+		static readonly DamageLayer PlayerLayer = DamageLayer.Of("playerLayer");
+
+		static readonly SpawnRequestType Bullet      = SpawnRequestType.Of("bulletSpawn");
+		static readonly SpawnRequestType BonusBullet = SpawnRequestType.Of("bonusBulletSpawn");
+		static readonly SpawnRequestType Obstacle    = SpawnRequestType.Of("obstacleSpawn");
+		static readonly SpawnRequestType Health      = SpawnRequestType.Of("healthSpawn");
+		static readonly SpawnRequestType Bonus       = SpawnRequestType.Of("bonusSpawn");
+
+		static readonly ItemType HealthItem = ItemType.Of("healthItem");
+		static readonly ItemType BonusItem  = ItemType.Of("bonusItem");
 
 		public static ISystem PlayerKeyboardMovement => new KeyboardMovementSystem(key => {
 			switch ( key ) {
@@ -24,15 +28,15 @@ namespace PiLedGame {
 			return default;
 		});
 
-		public static ISystem PreventSpawnCollisions => new PreventSpawnCollisionSystem(Obstacle, HealthItem, BonusItem);
+		public static ISystem PreventSpawnCollisions => new PreventSpawnCollisionSystem(Obstacle, Health, Bonus);
 
-		public static ISystem PreventHealthSpawnIfNotRequired => new PreventHealthSpawnSystem(HealthItem, 3);
+		public static ISystem PreventHealthSpawnIfNotRequired => new PreventHealthSpawnSystem(Health, 3);
 
 		public static ISystem[] SpawnItems => new ISystem[] {
-			new SpawnSystem(HealthItem, (e, origin) => {
+			new SpawnSystem(Health, (e, origin) => {
 				e.SolidRender(origin, Color.Green).Falling(0.75).With(new ItemComponent(HealthItem));
 			}),
-			new SpawnSystem(BonusItem, (e, origin) => {
+			new SpawnSystem(Bonus, (e, origin) => {
 				e.SolidRender(origin, Color.Red).Falling(0.75).With(new ItemComponent(BonusItem));
 			}),
 		};
@@ -72,8 +76,8 @@ namespace PiLedGame {
 
 		public static void PrepareState(GameState state) {
 			state.AddTopLine((e, x, y) => e.Spawn(x, y, Obstacle).With(new RandomSpawnComponent(2, 5)));
-            state.AddTopLine((e, x, y) => e.Spawn(x, y, HealthItem).With(new RandomSpawnComponent(20, 40)));
-            state.AddTopLine((e, x, y) => e.Spawn(x, y, BonusItem).With(new RandomSpawnComponent(25, 70)));
+            state.AddTopLine((e, x, y) => e.Spawn(x, y, Health).With(new RandomSpawnComponent(20, 40)));
+            state.AddTopLine((e, x, y) => e.Spawn(x, y, Bonus).With(new RandomSpawnComponent(25, 70)));
             state.AddBottomLine((e, x, y) => e.Spawn(x, y, BonusBullet));
             using ( var editor = state.Entities.Edit() ) {
               editor.AddEntity().SolidRender(new Point2D(4, 6), Color.Green)
@@ -111,7 +115,7 @@ namespace PiLedGame {
 			return entity;
 		}
 
-		static Entity Spawn(this Entity entity, int x, int y, string spawnRequest) {
+		static Entity Spawn(this Entity entity, int x, int y, SpawnRequestType spawnRequest) {
 			entity.AddComponent(new PositionComponent(new Point2D(x, y)));
 			entity.AddComponent(new SpawnComponent(spawnRequest));
 			return entity;

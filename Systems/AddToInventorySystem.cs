@@ -6,7 +6,7 @@ namespace PiLedGame.Systems {
 	public sealed class AddToInventorySystem : ISystem {
 		public void Update(GameState state) {
 			foreach ( var (_, inv, ev) in state.Entities.Get<InventoryComponent, AddItemEvent>() ) {
-				inv.AddItem(ev.Type, ev.Count);
+				inv.AddItem(ev.Item);
 			}
 		}
 	}

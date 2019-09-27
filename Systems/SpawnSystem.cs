@@ -7,18 +7,18 @@ using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class SpawnSystem : ISystem {
-		readonly string                  _requestId;
+		readonly SpawnRequestType        _request;
 		readonly Action<Entity, Point2D> _spawnCallback;
 
-		public SpawnSystem(string requestId, Action<Entity, Point2D> spawnCallback) {
-			_requestId     = requestId;
+		public SpawnSystem(SpawnRequestType request, Action<Entity, Point2D> spawnCallback) {
+			_request       = request;
 			_spawnCallback = spawnCallback;
 		}
 
 		public void Update(GameState state) {
 			using ( var editor = state.Entities.Edit() ) {
 				foreach ( var (_, position, ev) in state.Entities.Get<PositionComponent, SpawnEvent>() ) {
-					if ( ev.RequestId != _requestId ) {
+					if ( ev.Request != _request ) {
 						continue;
 					}
 					_spawnCallback(editor.AddEntity(), position.Point);

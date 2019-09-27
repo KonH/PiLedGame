@@ -1,9 +1,11 @@
+using PiLedGame.Common;
+
 namespace PiLedGame.Components {
 	public sealed class SpawnComponent : IComponent {
-		public readonly string RequestId;
+		public readonly SpawnRequestType Request;
 
-		public SpawnComponent(string requestId) {
-			RequestId = requestId;
+		public SpawnComponent(SpawnRequestType request) {
+			Request = request;
 		}
 	}
 }

@@ -1,9 +1,11 @@
+using PiLedGame.Common;
+
 namespace PiLedGame.Events {
 	public sealed class SpawnEvent : IEvent {
-		public readonly string RequestId;
+		public readonly SpawnRequestType Request;
 
-		public SpawnEvent(string requestId) {
-			RequestId = requestId;
+		public SpawnEvent(SpawnRequestType request) {
+			Request = request;
 		}
 	}
 }

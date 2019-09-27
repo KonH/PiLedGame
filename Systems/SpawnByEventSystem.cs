@@ -1,13 +1,14 @@
+using PiLedGame.Common;
 using PiLedGame.Components;
 using PiLedGame.Events;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class SpawnByEventSystem<T> : ISystem where T : class, IEvent {
-		readonly string _requestId;
+		readonly SpawnRequestType _request;
 
-		public SpawnByEventSystem(string requestId) {
-			_requestId = requestId;
+		public SpawnByEventSystem(SpawnRequestType request) {
+			_request = request;
 		}
 
 		public void Update(GameState state) {
@@ -16,8 +17,8 @@ namespace PiLedGame.Systems {
 				return;
 			}
 			foreach ( var (entity, spawn) in state.Entities.Get<SpawnComponent>() ) {
-				if ( spawn.RequestId == _requestId ) {
-					entity.AddComponent(new SpawnEvent(_requestId));
+				if ( spawn.Request == _request ) {
+					entity.AddComponent(new SpawnEvent(_request));
 				}
 			}
 		}

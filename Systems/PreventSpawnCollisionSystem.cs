@@ -1,18 +1,20 @@
+using System.Collections.Generic;
 using System.Linq;
+using PiLedGame.Common;
 using PiLedGame.Events;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class PreventSpawnCollisionSystem : ISystem {
-		readonly string[] _requestIds;
+		readonly HashSet<SpawnRequestType> _requests;
 
-		public PreventSpawnCollisionSystem(params string[] requestIds) {
-			_requestIds = requestIds;
+		public PreventSpawnCollisionSystem(params SpawnRequestType[] requests) {
+			_requests = new HashSet<SpawnRequestType>(requests);
 		}
 
 		public void Update(GameState state) {
 			foreach ( var (entity, ev, _) in state.Entities.Get<SpawnEvent, CollisionEvent>() ) {
-				if ( _requestIds.Contains(ev.RequestId) ) {
+				if ( _requests.Contains(ev.Request) ) {
 					entity.RemoveComponent(ev);
 				}
 			}

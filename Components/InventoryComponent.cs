@@ -1,22 +1,23 @@
 using System.Collections.Generic;
+using PiLedGame.Common;
 
 namespace PiLedGame.Components {
 	public sealed class InventoryComponent : IComponent {
-		Dictionary<string, int> _items = new Dictionary<string, int>();
+		Dictionary<ItemType, int> _items = new Dictionary<ItemType, int>();
 
-		public void AddItem(string type, int count) {
-			_items[type] = _items.GetValueOrDefault(type) + count;
+		public void AddItem(ItemType item) {
+			_items[item] = _items.GetValueOrDefault(item) + 1;
 		}
 
-		public bool TryGetItem(string type) {
-			if ( !_items.TryGetValue(type, out var count) || (count <= 0) ) {
+		public bool TryGetItem(ItemType item) {
+			if ( !_items.TryGetValue(item, out var count) || (count <= 0) ) {
 				return false;
 			}
 			var newCount = count - 1;
 			if ( newCount == 0 ) {
-				_items.Remove(type);
+				_items.Remove(item);
 			} else {
-				_items[type] = newCount;
+				_items[item] = newCount;
 			}
 			return true;
 		}

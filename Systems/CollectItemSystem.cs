@@ -11,7 +11,7 @@ namespace PiLedGame.Systems {
 					continue;
 				}
 				collision.Other.AddComponent(new CollectItemEvent());
-				entity.AddComponent(new AddItemEvent(item));
+				entity.AddComponent(new AddItemEvent(item.Item));
 			}
 		}
 	}
