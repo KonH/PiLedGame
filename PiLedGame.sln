@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleECS.Core", "SimpleECS.Core\SimpleECS.Core.csproj", "{59146992-161D-48E1-9D32-02A60D6E4B37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleECS.ConsoleLayer", "SimpleECS.ConsoleLayer\SimpleECS.ConsoleLayer.csproj", "{265A07DE-ABDD-4183-B930-3ECAFAE8E858}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleECS.RaspberryPi", "SimpleECS.RaspberryPi\SimpleECS.RaspberryPi.csproj", "{D396420C-0ADB-4B84-B593-60E93DB3DBF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShootGame.Logic", "ShootGame.Logic\ShootGame.Logic.csproj", "{5BF7C8FE-9DB8-4296-A63F-90D016FB1024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShootGame.NetCore", "ShootGame.NetCore\ShootGame.NetCore.csproj", "{AA2E3694-DA36-4A06-B232-86FF8EB7BC57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59146992-161D-48E1-9D32-02A60D6E4B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59146992-161D-48E1-9D32-02A60D6E4B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59146992-161D-48E1-9D32-02A60D6E4B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59146992-161D-48E1-9D32-02A60D6E4B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{265A07DE-ABDD-4183-B930-3ECAFAE8E858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265A07DE-ABDD-4183-B930-3ECAFAE8E858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265A07DE-ABDD-4183-B930-3ECAFAE8E858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265A07DE-ABDD-4183-B930-3ECAFAE8E858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D396420C-0ADB-4B84-B593-60E93DB3DBF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D396420C-0ADB-4B84-B593-60E93DB3DBF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D396420C-0ADB-4B84-B593-60E93DB3DBF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D396420C-0ADB-4B84-B593-60E93DB3DBF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BF7C8FE-9DB8-4296-A63F-90D016FB1024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BF7C8FE-9DB8-4296-A63F-90D016FB1024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BF7C8FE-9DB8-4296-A63F-90D016FB1024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BF7C8FE-9DB8-4296-A63F-90D016FB1024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA2E3694-DA36-4A06-B232-86FF8EB7BC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA2E3694-DA36-4A06-B232-86FF8EB7BC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA2E3694-DA36-4A06-B232-86FF8EB7BC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA2E3694-DA36-4A06-B232-86FF8EB7BC57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

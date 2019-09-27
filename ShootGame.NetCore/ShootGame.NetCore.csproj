@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShootGame.Logic\ShootGame.Logic.csproj" />
+    <ProjectReference Include="..\SimpleECS.ConsoleLayer\SimpleECS.ConsoleLayer.csproj" />
+    <ProjectReference Include="..\SimpleECS.RaspberryPi\SimpleECS.RaspberryPi.csproj" />
+  </ItemGroup>
+
+</Project>
