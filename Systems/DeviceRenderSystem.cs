@@ -3,17 +3,23 @@ using PiLedGame.State;
 using rpi_ws281x;
 
 namespace PiLedGame.Systems {
-	public sealed class DeviceRenderSystem : ISystem, IDisposable {
-		readonly Controller _controller;
-		readonly WS281x     _device;
+	public sealed class DeviceRenderSystem : ISystem, IInit, IDisposable {
+		readonly byte _brightness;
 
-		public DeviceRenderSystem(GameState state, byte brightness = 255) {
+		Controller _controller;
+		WS281x     _device;
+
+		public DeviceRenderSystem(byte brightness) {
+			_brightness = brightness;
+		}
+
+		public void Init(GameState state) {
 			var screen = state.Graphics.Screen;
 			var settings = Settings.CreateDefaultSettings();
 			var ledCount = screen.Width * screen.Height;
 			try {
 				_controller = settings.AddController(
-					ledCount, Pin.Gpio18, StripType.WS2812_STRIP, brightness: brightness);
+					ledCount, Pin.Gpio18, StripType.WS2812_STRIP, brightness: _brightness);
 				_device = new WS281x(settings);
 			} catch ( DllNotFoundException e ) {
 				state.Debug.Log($"Failed to load device DLL (it's fine for debug): {e.Message}");

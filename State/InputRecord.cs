@@ -1,11 +1,25 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace PiLedGame.State {
 	public sealed class InputRecord {
 		public readonly List<InputFrame> Frames;
 
-		public InputRecord(params InputFrame[] frameKeys) {
-			Frames = new List<InputFrame>(frameKeys);
+		public InputRecord():this(new List<InputFrame>()) {}
+
+		InputRecord(List<InputFrame> frameKeys) {
+			Frames = frameKeys;
+		}
+
+		public void Save(string path) {
+			File.WriteAllLines(path, Frames.Select(f => f.ToString()));
+		}
+
+		public static InputRecord Load(string path) {
+			var lines = File.ReadAllLines(path);
+			var frames = lines.Select(InputFrame.Parse).ToList();
+			return new InputRecord(frames);
 		}
 	}
 }

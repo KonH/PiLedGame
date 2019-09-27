@@ -1,12 +1,24 @@
 using System;
+using System.Collections.Generic;
 using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class SystemSet {
-		readonly ISystem[] _systems;
+		readonly List<ISystem> _systems = new List<ISystem>();
 
-		public SystemSet(params ISystem[] systems) {
-			_systems = systems;
+		public void Add(ISystem system) {
+			_systems.Add(system);
+		}
+
+		public T Get<T>() where T : ISystem {
+			return (T)_systems.Find(s => s is T);
+		}
+
+		public void Init(GameState state) {
+			foreach ( var system in _systems ) {
+				var init = system as IInit;
+				init?.Init(state);
+			}
 		}
 
 		public void UpdateLoop(GameState state) {
