@@ -1,10 +1,10 @@
-using System;
+using PiLedGame.Common;
 
 namespace PiLedGame.State {
 	public sealed class Input {
-		public ConsoleKey Current { get; private set; }
+		public KeyCode Current { get; private set; }
 
-		public void Assign(ConsoleKey key) {
+		public void Assign(KeyCode key) {
 			Current = key;
 		}
 

@@ -6,10 +6,10 @@ using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class KeyboardSpawnSystem : ISystem {
-		readonly ConsoleKey       _key;
+		readonly KeyCode       _key;
 		readonly SpawnRequestType _request;
 
-		public KeyboardSpawnSystem(ConsoleKey key, SpawnRequestType request) {
+		public KeyboardSpawnSystem(KeyCode key, SpawnRequestType request) {
 			_key     = key;
 			_request = request;
 		}

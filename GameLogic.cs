@@ -22,8 +22,8 @@ namespace PiLedGame {
 
 		public static ISystem PlayerKeyboardMovement => new KeyboardMovementSystem(key => {
 			switch ( key ) {
-				case ConsoleKey.LeftArrow: return Point2D.Left;
-				case ConsoleKey.RightArrow: return Point2D.Right;
+				case KeyCode.LeftArrow: return Point2D.Left;
+				case KeyCode.RightArrow: return Point2D.Right;
 			}
 			return default;
 		});
@@ -46,7 +46,7 @@ namespace PiLedGame {
 		});
 
 		public static ISystem[] PlayerShoots => new ISystem[] {
-			new KeyboardSpawnSystem(ConsoleKey.Spacebar, Bullet),
+			new KeyboardSpawnSystem(KeyCode.Spacebar, Bullet),
 			new SpawnSystem(Bullet, (e, origin) => {
 				e.SolidRender(origin + Point2D.Up, Color.Red).Rising(0.33)
 					.With(new DamageComponent(layer: PlayerLayer))

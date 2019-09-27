@@ -6,9 +6,9 @@ using PiLedGame.State;
 
 namespace PiLedGame.Systems {
 	public sealed class KeyboardMovementSystem : ISystem {
-		readonly Func<ConsoleKey, Point2D> _movement;
+		readonly Func<KeyCode, Point2D> _movement;
 
-		public KeyboardMovementSystem(Func<ConsoleKey, Point2D> movement) {
+		public KeyboardMovementSystem(Func<KeyCode, Point2D> movement) {
 			_movement = movement;
 		}
 
