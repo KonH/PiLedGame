@@ -2,3 +2,8 @@
 .vscode
 bin
 obj
+ShootGame_Unity/Library
+ShootGame_Unity/Logs
+ShootGame_Unity/Temp
+ShootGame_Unity/*.sln
+ShootGame_Unity/*.csproj
