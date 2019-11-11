@@ -19,7 +19,7 @@ namespace SimpleECS.Core.State {
 		public static InputFrame Parse(string str) {
 			var parts = str.Split('=');
 			var time = double.Parse(parts[0]);
-			var key = Enum.Parse<KeyCode>(parts[1]);
+			var key = (KeyCode)Enum.Parse(typeof(KeyCode), parts[1]);
 			return new InputFrame(time, key);
 		}
 	}

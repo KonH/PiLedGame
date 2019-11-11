@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SimpleECS.Core.Utils;
 using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Components {

@@ -75,7 +75,9 @@ namespace SimpleECS.Core.Systems {
 		}
 
 		void Trim(double time) {
-			foreach ( var (trail, data) in _data ) {
+			foreach ( var p in _data ) {
+				var trail = p.Key;
+				var data = p.Value;
 				if ( !data.Trim(time) ) {
 					_outdatedData.Add(trail);
 				}
@@ -87,7 +89,8 @@ namespace SimpleECS.Core.Systems {
 		}
 
 		void Render(double time, Frame frame) {
-			foreach ( var (_, data) in _data ) {
+			foreach ( var p in _data ) {
+				var data = p.Value;
 				foreach ( var pos in data.Positions ) {
 					frame.ChangeAt(pos.Point, data.CalculateAt(time, pos));
 				}
