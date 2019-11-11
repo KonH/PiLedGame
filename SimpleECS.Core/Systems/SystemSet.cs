@@ -23,12 +23,21 @@ namespace SimpleECS.Core.Systems {
 
 		public void UpdateLoop(GameState state) {
 			while ( true ) {
-				Update(state);
-				if ( state.Execution.IsFinished ) {
+				var isFinished = UpdateOnce(state);
+				if ( isFinished ) {
 					TryDispose();
 					break;
 				}
 			}
+		}
+
+		public bool UpdateOnce(GameState state) {
+			Update(state);
+			if ( state.Execution.IsFinished ) {
+				TryDispose();
+				return true;
+			}
+			return false;
 		}
 
 		void Update(GameState state) {
@@ -42,7 +51,7 @@ namespace SimpleECS.Core.Systems {
 			}
 		}
 
-		void TryDispose() {
+		public void TryDispose() {
 			foreach ( var system in _systems ) {
 				if ( system is IDisposable disposable ) {
 					disposable.Dispose();
