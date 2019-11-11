@@ -4,7 +4,7 @@ using SimpleECS.Core.State;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.RaspberryPi.Systems {
-	public sealed class DeviceRenderSystem : ISystem, IInit, IDisposable {
+	public sealed class DeviceRenderSystem : IRenderSystem, IInit, IDisposable {
 		readonly byte _brightness;
 
 		Controller _controller;

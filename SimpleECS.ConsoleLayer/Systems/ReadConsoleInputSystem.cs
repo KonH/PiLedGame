@@ -1,15 +1,14 @@
 using System;
-using SimpleECS.Core.State;
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {
-	public sealed class ReadConsoleInputSystem : ISystem {
-		public void Update(GameState state) {
-			if ( Console.KeyAvailable ) {
-				var key = Console.ReadKey().Key;
-				state.Input.Assign(ConvertKey(key));
+	public sealed class ReadConsoleReadInputSystem : ReadInputSystemBase, ISystem {
+		public override (bool, KeyCode) TryReadKey() {
+			if ( !Console.KeyAvailable ) {
+				return (false, default);
 			}
+			return (true, ConvertKey(Console.ReadKey().Key));
 		}
 
 		KeyCode ConvertKey(ConsoleKey consoleKey) {
