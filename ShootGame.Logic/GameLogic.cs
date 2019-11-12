@@ -10,6 +10,12 @@ using ShootGame.Logic.Systems;
 
 namespace ShootGame.Logic {
 	public static class GameLogic {
+		public static class Controls {
+			public const KeyCode MoveLeft  = KeyCode.LeftArrow;
+			public const KeyCode MoveRight = KeyCode.RightArrow;
+			public const KeyCode Shoot     = KeyCode.Spacebar;
+		}
+
 		static readonly DamageLayer PlayerLayer = DamageLayer.Of("playerLayer");
 
 		static readonly SpawnRequestType Bullet      = SpawnRequestType.Of("bulletSpawn");
@@ -23,8 +29,8 @@ namespace ShootGame.Logic {
 
 		public static ISystem PlayerKeyboardMovement => new KeyboardMovementSystem(key => {
 			switch ( key ) {
-				case KeyCode.LeftArrow: return Point2D.Left;
-				case KeyCode.RightArrow: return Point2D.Right;
+				case Controls.MoveLeft: return Point2D.Left;
+				case Controls.MoveRight: return Point2D.Right;
 			}
 			return default;
 		});
@@ -47,7 +53,7 @@ namespace ShootGame.Logic {
 		});
 
 		public static ISystem[] PlayerShoots => new ISystem[] {
-			new KeyboardSpawnSystem(KeyCode.Spacebar, Bullet),
+			new KeyboardSpawnSystem(Controls.Shoot, Bullet),
 			new SpawnSystem(Bullet, (e, origin) => {
 				e.SolidRender(origin + Point2D.Up, Color.Red).Rising(0.33)
 					.With(new DamageComponent(layer: PlayerLayer))

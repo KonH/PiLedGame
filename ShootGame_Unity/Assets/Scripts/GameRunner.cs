@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using SimpleECS.Core.State;
 using SimpleECS.Core.Systems;
@@ -6,6 +7,7 @@ using ShootGame.Logic;
 using ShootGame.Logic.Systems;
 
 using Debug = UnityEngine.Debug;
+using KeyCode = SimpleECS.Core.Common.KeyCode;
 
 namespace ShootGame.Unity {
 	public class GameRunner : MonoBehaviour {
@@ -16,7 +18,11 @@ namespace ShootGame.Unity {
 			var config = new Configuration(false, null, null, 0);
 			var root = new CompositionRoot(
 				config,
-				() => new ReadUnityInputSystem(),
+				() => new ReadUnityInputSystem(new Dictionary<UnityEngine.KeyCode, KeyCode> {
+					{ UnityEngine.KeyCode.LeftArrow, KeyCode.LeftArrow },
+					{ UnityEngine.KeyCode.RightArrow, KeyCode.RightArrow },
+					{ UnityEngine.KeyCode.Space, KeyCode.Spacebar }
+				}),
 				new Func<ISystem>[0],
 				() => new ReadUnityRealTimeSystem(),
 				() => new UnityRenderSystem());
