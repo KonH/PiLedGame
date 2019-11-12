@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Collections.Generic;
 using SimpleECS.Core.State;
 using SimpleECS.Core.Common;
@@ -36,11 +35,7 @@ namespace SimpleECS.Core.Systems {
 
 			public Color CalculateAt(double time, PositionData data) {
 				var power = 1 - ((time - data.Time) / _wantedTime);
-				return Multiply(_color, power);
-			}
-
-			Color Multiply(Color color, double power) {
-				return Color.FromArgb((byte)(color.R * power), (byte)(color.G * power), (byte)(color.B * power));
+				return _color.Multiply(power);
 			}
 		}
 

@@ -1,6 +1,6 @@
 using System;
-using System.Drawing;
 using SimpleECS.Core.State;
+using SimpleECS.Core.Common;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {

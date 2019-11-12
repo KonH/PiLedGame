@@ -1,4 +1,4 @@
-using System.Drawing;
+using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Components {
 	public sealed class RenderComponent : IComponent {

@@ -1,4 +1,3 @@
-using System.Drawing;
 using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.State {

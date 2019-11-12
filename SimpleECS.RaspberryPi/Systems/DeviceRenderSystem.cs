@@ -38,7 +38,8 @@ namespace SimpleECS.RaspberryPi.Systems {
 			for ( var y = 0; y < height; y++ ) {
 				for ( var x = 0; x < width; x++ ) {
 					var id = y * width + x;
-					_controller.SetLED(id, renderFrame[x, y]);
+					var color = renderFrame[x, y];
+					_controller.SetLED(id, System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B));
 				}
 			}
 			_device.Render();

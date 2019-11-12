@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using SimpleECS.Core.State;
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Events;
