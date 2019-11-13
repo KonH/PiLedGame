@@ -11,6 +11,8 @@ using KeyCode = SimpleECS.Core.Common.KeyCode;
 
 namespace ShootGame.Unity {
 	public class GameRunner : MonoBehaviour {
+		[SerializeField] UnityRenderer Renderer = null;
+
 		GameState _state;
 		SystemSet _systems;
 
@@ -25,7 +27,7 @@ namespace ShootGame.Unity {
 				}),
 				new Func<ISystem>[0],
 				() => new ReadUnityRealTimeSystem(),
-				() => new UnityRenderSystem());
+				() => new UnityRenderSystem(Renderer));
 			(_state, _systems) = root.Create();
 		}
 

@@ -93,7 +93,6 @@ namespace ShootGame.Logic {
 			AddIf(config.IsPlaying, _realTimeSystem);
 			Add(_renderSystem());
 			Add(new CleanUpEventSystem());
-			Add(new WaitForTargetFpsSystem(60));
 			return _systems;
 		}
 
