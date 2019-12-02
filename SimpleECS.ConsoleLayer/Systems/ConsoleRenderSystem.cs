@@ -6,7 +6,7 @@ using SimpleECS.Core.Systems;
 namespace SimpleECS.ConsoleLayer.Systems {
 	public sealed class ConsoleRenderSystem : ISystem {
 		public void Update(GameState state) {
-			if ( !state.Debug.IsTriggered ) {
+			if ( (state.Debug != null) && !state.Debug.IsTriggered ) {
 				return;
 			}
 			var frame = state.Graphics.Frame;
