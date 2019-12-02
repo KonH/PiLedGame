@@ -9,9 +9,10 @@ namespace SimpleECS.ConsoleLayer.Systems {
 			if ( (state.Debug != null) && !state.Debug.IsTriggered ) {
 				return;
 			}
+			var screen = state.Graphics.Screen;
 			var frame = state.Graphics.Frame;
-			for ( var y = 0; y < 8; y++ ) {
-				for ( var x = 0; x < 8; x++ ) {
+			for ( var y = 0; y < screen.Height; y++ ) {
+				for ( var x = 0; x < screen.Width; x++ ) {
 					Console.BackgroundColor = FromColor(frame[x, y]);
 					Console.Write(" x ");
 					Console.BackgroundColor = ConsoleColor.Black;
