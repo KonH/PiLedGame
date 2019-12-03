@@ -19,6 +19,8 @@ namespace SoftwareRender.Core.Systems {
 			frame.DrawScreenLine(0, 27, 31, 27, Color.Green);
 
 			frame.DrawScreenLineSmooth(1, 5, 20, 10, Color.Firebrick);
+
+			frame.DrawScreenCircle(20, 20, 8, Color.Indigo);
 		}
 	}
 }
