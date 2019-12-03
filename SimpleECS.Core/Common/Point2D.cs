@@ -45,5 +45,10 @@ namespace SimpleECS.Core.Common {
 		public static bool operator !=(Point2D p1, Point2D p2) {
 			return !(p1 == p2);
 		}
+
+		public void Deconstruct(out int x, out int y) {
+			x = X;
+			y = Y;
+		}
 	}
 }
