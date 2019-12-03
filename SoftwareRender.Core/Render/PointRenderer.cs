@@ -1,0 +1,14 @@
+using SimpleECS.Core.Common;
+using SimpleECS.Core.State;
+
+namespace SoftwareRender.Core.Render {
+	public static class PointRenderer {
+		public static void DrawScreenPoint(this Frame frame, int x, int y, Color color) {
+			frame.DrawScreenPoint(new Point2D(x, y), color);
+		}
+
+		public static void DrawScreenPoint(this Frame frame, Point2D position, Color color) {
+			frame.ChangeAt(position, color);
+		}
+	}
+}
