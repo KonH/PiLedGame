@@ -46,7 +46,11 @@ namespace SimpleECS.Core.Systems {
 					system.Update(state);
 				}
 				catch ( Exception e ) {
-					state.Debug.Log(e.ToString());
+					if ( state.Debug != null ) {
+						state.Debug.Log(e.ToString());
+					} else {
+						Console.Write(e.ToString());
+					}
 				}
 			}
 		}
