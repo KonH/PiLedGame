@@ -11,6 +11,7 @@ namespace SoftwareRender.Core {
 			var systems = new SystemSet();
 			systems.Add(new DirectRenderSystem());
 			systems.Add(new ConsoleRenderSystem());
+			systems.Add(new RenderToFileSystem("frame_{0}.png"));
 			systems.UpdateOnce(state);
 		}
 	}
