@@ -11,7 +11,7 @@ namespace SimpleECS.ConsoleLayer.Systems {
 			}
 			var screen = state.Graphics.Screen;
 			var frame = state.Graphics.Frame;
-			for ( var y = 0; y < screen.Height; y++ ) {
+			for ( var y = screen.Height - 1; y >= 0; y-- ) {
 				for ( var x = 0; x < screen.Width; x++ ) {
 					Console.BackgroundColor = FromColor(frame[x, y]);
 					Console.Write(" x ");

@@ -74,7 +74,7 @@ namespace ShootGame.Logic {
 		public static ISystem Healing => new UseItemSystem<AddHealthEvent>(HealthItem);
 
 		public static ISystem HealthUI =>
-			new RenderPlayerHealthSystem(new Point2D(0, 7), Point2D.Right, health => {
+			new RenderPlayerHealthSystem(new Point2D(0, 0), Point2D.Right, health => {
 				if ( health >= 3 ) {
 					return Color.Green;
 				}
@@ -87,7 +87,7 @@ namespace ShootGame.Logic {
             state.AddTopLine((e, x, y) => e.Spawn(x, y, Bonus).With(new RandomSpawnComponent(25, 70)));
             state.AddBottomLine((e, x, y) => e.Spawn(x, y, BonusBullet));
             using ( var editor = state.Entities.Edit() ) {
-              editor.AddEntity().SolidRender(new Point2D(4, 6), Color.Green)
+              editor.AddEntity().SolidRender(new Point2D(4, 1), Color.Green)
 	              .With(new PlayerComponent())
 	              .With(new SpawnComponent(Bullet))
 	              .With(new KeyboardSpawnComponent())
@@ -130,8 +130,9 @@ namespace ShootGame.Logic {
 
 		static void AddTopLine(this GameState state, Action<Entity, int, int> entityCtor) {
 			using ( var editor = state.Entities.Edit() ) {
+				var screen = state.Graphics.Screen;
 				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
-					entityCtor(editor.AddEntity(), i, 0);
+					entityCtor(editor.AddEntity(), i, screen.Height - 1);
 				}
 			}
 		}
@@ -140,7 +141,7 @@ namespace ShootGame.Logic {
 			using ( var editor = state.Entities.Edit() ) {
 				var screen = state.Graphics.Screen;
 				for ( var i = 0; i < screen.Width; i++ ) {
-					entityCtor(editor.AddEntity(), i, screen.Height - 1);
+					entityCtor(editor.AddEntity(), i, 0);
 				}
 			}
 		}
