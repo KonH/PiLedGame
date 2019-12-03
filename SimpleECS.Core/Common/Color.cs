@@ -24,6 +24,8 @@ namespace SimpleECS.Core.Common {
 			return FromArgb((byte)(R * power), (byte)(G * power), (byte)(B * power));
 		}
 
+		public Color ChangeAlpha(int alpha) => FromArgb(alpha, R, G, B);
+
 		public static Color FromArgb(int alpha, int red, int green, int blue) {
 			CheckByte(alpha, nameof(alpha));
 			CheckByte(red, nameof(red));
