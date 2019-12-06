@@ -1,38 +1,32 @@
-using System;
-using SimpleECS.Core.State;
+using ShootGame.Logic.Configs;
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Systems;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace ShootGame.Logic.Systems {
 	public class RenderPlayerHealthSystem : ISystem {
-		readonly Point2D          _startPosition;
-		readonly Point2D          _offset;
-		readonly Func<int, Color> _healthToColor;
+		readonly RenderPlayerHealthConfig _config;
 
-		public RenderPlayerHealthSystem(Point2D startPosition, Point2D offset, Func<int, Color> healthToColor) {
-			_startPosition = startPosition;
-			_offset        = offset;
-			_healthToColor = healthToColor;
+		public RenderPlayerHealthSystem(RenderPlayerHealthConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			var health = GetHealth(state);
-			RenderHealth(state, health);
-		}
-
-		int GetHealth(GameState state) {
-			foreach ( var (_, _, health) in state.Entities.Get<PlayerComponent, HealthComponent>() ) {
-				return health.Health;
+		public void Update(EntitySet entities) {
+			var (_, health) = entities.GetFirstComponent<PlayerComponent, HealthComponent>();
+			var value = health?.Health ?? 0;
+			foreach ( var frame in entities.GetComponent<FrameState>()) {
+				RenderHealth(frame, value);
 			}
-			return 0;
 		}
 
-		void RenderHealth(GameState state, int health) {
-			var color = _healthToColor(health);
+		void RenderHealth(FrameState frame, int health) {
+			var color = _config.HealthToColor(health);
 			for ( var i = 0; i < health; i++ ) {
-				var position = _startPosition + new Point2D(_offset.X * i, _offset.Y * i);
-				state.Graphics.Frame.ChangeAt(position, color);
+				var offset = new Point2D(_config.Offset.X * i, _config.Offset.Y * i);
+				var position = _config.StartPosition + offset;
+				frame.ChangeAt(position, color);
 			}
 		}
 	}

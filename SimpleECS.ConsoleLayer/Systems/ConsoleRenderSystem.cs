@@ -1,18 +1,23 @@
 using System;
-using SimpleECS.Core.State;
 using SimpleECS.Core.Common;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.States;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {
-	public sealed class ConsoleRenderSystem : ISystem {
-		public void Update(GameState state) {
-			if ( (state.Debug != null) && !state.Debug.IsTriggered ) {
+	public sealed class ConsoleRenderSystem : IndependentSingleComponentSystem<DebugState, FrameState> {
+		readonly ScreenConfig _screen;
+
+		public ConsoleRenderSystem(ScreenConfig screen) {
+			_screen = screen;
+		}
+
+		public override void Update(DebugState debug, FrameState frame) {
+			if ( (debug != null) && !debug.IsTriggered ) {
 				return;
 			}
-			var screen = state.Graphics.Screen;
-			var frame = state.Graphics.Frame;
-			for ( var y = screen.Height - 1; y >= 0; y-- ) {
-				for ( var x = 0; x < screen.Width; x++ ) {
+			for ( var y = _screen.Height - 1; y >= 0; y-- ) {
+				for ( var x = 0; x < _screen.Width; x++ ) {
 					Console.BackgroundColor = FromColor(frame[x, y]);
 					Console.Write(" x ");
 					Console.BackgroundColor = ConsoleColor.Black;

@@ -1,17 +1,17 @@
-using SimpleECS.Core.State;
+using SimpleECS.Core.Common;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class SaveInputSystem : ISystem {
-		readonly InputRecord _record;
+		public SaveInputSystem() {}
 
-		public SaveInputSystem(InputRecord record) {
-			_record = record;
-		}
-
-		public void Update(GameState state) {
-			var key = state.Input.Current;
+		public void Update(EntitySet entities) {
+			var key = entities.GetFirstComponent<InputState>().Current;
 			if ( key != default ) {
-				_record.Frames.Add(new InputFrame(state.Time.UnscaledTotalTime, key));
+				var recordState = entities.GetFirstComponent<InputRecordState>();
+				var time = entities.GetFirstComponent<TimeState>().UnscaledTotalTime;
+				recordState.Frames.Add(new FrameRecord(time, key));
 			}
 		}
 	}

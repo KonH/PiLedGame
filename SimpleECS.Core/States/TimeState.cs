@@ -1,5 +1,7 @@
-namespace SimpleECS.Core.State {
-	public sealed class Time {
+using SimpleECS.Core.Components;
+
+namespace SimpleECS.Core.States {
+	public sealed class TimeState : IComponent {
 		public double UnscaledTotalTime { get; private set; }
 		public double TotalTime         { get; private set; }
 		public double UnscaledDeltaTime { get; private set; }

@@ -1,11 +1,12 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class TimerTickSystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var (entity, timer) in state.Entities.Get<TimerComponent>() ) {
+	public sealed class TimerTickSystem : EntityComponentSystem<TimerComponent> {
+		public override void Update(List<(Entity, TimerComponent)> entities) {
+			foreach ( var (entity, timer) in entities ) {
 				if ( timer.Time >= timer.Interval ) {
 					entity.AddComponent(new TimerTickEvent());
 				}

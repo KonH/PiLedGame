@@ -1,7 +1,7 @@
-using SimpleECS.Core.State;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
 	public interface ISystem {
-		void Update(GameState state);
+		void Update(EntitySet entities);
 	}
 }

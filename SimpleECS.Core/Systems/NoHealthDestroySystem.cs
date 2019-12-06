@@ -1,14 +1,13 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class NoHealthDestroySystem : ISystem {
-		public void Update(GameState state) {
-			using ( var editor = state.Entities.Edit() ) {
-				foreach ( var (entity, health) in state.Entities.Get<HealthComponent>() ) {
-					if ( health.Health <= 0 ) {
-						editor.RemoveEntity(entity);
-					}
+	public sealed class NoHealthDestroySystem : EditableEntityComponentSystem<HealthComponent> {
+		public override void Update(List<(Entity, HealthComponent)> entities, EntityEditor editor) {
+			foreach ( var (entity, health) in entities ) {
+				if ( health.Health <= 0 ) {
+					editor.RemoveEntity(entity);
 				}
 			}
 		}

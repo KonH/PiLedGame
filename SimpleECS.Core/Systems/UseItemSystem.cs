@@ -1,19 +1,20 @@
-using SimpleECS.Core.State;
-using SimpleECS.Core.Common;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class UseItemSystem<T> : ISystem where T : IEvent, new() {
-		readonly ItemType _item;
+	public sealed class UseItemSystem<T> : EntityComponentSystem<InventoryComponent> where T : IEvent, new() {
+		readonly UseItemConfig _config;
 
-		public UseItemSystem(ItemType item) {
-			_item = item;
+		public UseItemSystem(UseItemConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			foreach ( var (entity, inv) in state.Entities.Get<InventoryComponent>() ) {
-				if ( inv.TryGetItem(_item) ) {
+		public override void Update(List<(Entity, InventoryComponent)> entities) {
+			foreach ( var (entity, inv) in entities ) {
+				if ( inv.TryGetItem(_config.Item) ) {
 					entity.AddComponent(new T());
 				}
 			}

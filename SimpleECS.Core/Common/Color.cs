@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 
 namespace SimpleECS.Core.Common {
 	public struct Color {
@@ -20,6 +21,7 @@ namespace SimpleECS.Core.Common {
 			B = b;
 		}
 
+		[Pure]
 		public Color Multiply(double power) {
 			return FromArgb((byte)(R * power), (byte)(G * power), (byte)(B * power));
 		}

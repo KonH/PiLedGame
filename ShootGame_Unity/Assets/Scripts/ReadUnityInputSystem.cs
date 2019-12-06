@@ -3,7 +3,7 @@ using SimpleECS.Core.Common;
 using SimpleECS.Core.Systems;
 
 namespace ShootGame.Unity {
-	class ReadUnityInputSystem : ReadInputSystemBase {
+	class ReadUnityInputSystem : BaseReadInputSystem {
 		readonly Dictionary<UnityEngine.KeyCode, KeyCode> _controls;
 
 		public ReadUnityInputSystem(Dictionary<UnityEngine.KeyCode, KeyCode> controls) {

@@ -1,4 +1,3 @@
-using SimpleECS.Core.State;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Systems;
 using SimpleECS.Core.Entities;
@@ -8,9 +7,9 @@ namespace ShootGame.Logic.Systems {
 	public sealed class ScoreMeasureSystem : ISystem {
 		public int TotalScore = 0;
 
-		public void Update(GameState state) {
-			TotalScore += GetDestroyedUnits(state.Entities) * 10;
-			TotalScore += GetCollectedItems(state.Entities) * 50;
+		public void Update(EntitySet entities) {
+			TotalScore += GetDestroyedUnits(entities) * 10;
+			TotalScore += GetCollectedItems(entities) * 50;
 		}
 
 		int GetDestroyedUnits(EntitySet entities) {

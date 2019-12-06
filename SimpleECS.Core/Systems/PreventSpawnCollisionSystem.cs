@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using SimpleECS.Core.State;
-using SimpleECS.Core.Common;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
 using SimpleECS.Core.Events;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class PreventSpawnCollisionSystem : ISystem {
-		readonly HashSet<SpawnRequestType> _requests;
+	public sealed class PreventSpawnCollisionSystem : EntityComponentSystem<SpawnEvent, CollisionEvent> {
+		readonly PreventSpawnCollisionConfig _config;
 
-		public PreventSpawnCollisionSystem(params SpawnRequestType[] requests) {
-			_requests = new HashSet<SpawnRequestType>(requests);
+		public PreventSpawnCollisionSystem(PreventSpawnCollisionConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			foreach ( var (entity, ev, _) in state.Entities.Get<SpawnEvent, CollisionEvent>() ) {
-				if ( _requests.Contains(ev.Request) ) {
+		public override void Update(List<(Entity, SpawnEvent, CollisionEvent)> entities) {
+			foreach ( var (entity, ev, _) in entities ) {
+				if ( _config.Requests.Contains(ev.Request) ) {
 					entity.RemoveComponent(ev);
 				}
 			}

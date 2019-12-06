@@ -1,5 +1,5 @@
 using System;
-using SimpleECS.Core.State;
+using ShootGame.Logic.Configs;
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Systems;
@@ -7,6 +7,7 @@ using SimpleECS.Core.Entities;
 using SimpleECS.Core.Components;
 using ShootGame.Logic.Events;
 using ShootGame.Logic.Systems;
+using SimpleECS.Core.Configs;
 
 namespace ShootGame.Logic {
 	public static class GameLogic {
@@ -27,75 +28,80 @@ namespace ShootGame.Logic {
 		static readonly ItemType HealthItem = ItemType.Of("healthItem");
 		static readonly ItemType BonusItem  = ItemType.Of("bonusItem");
 
-		public static ISystem PlayerKeyboardMovement => new KeyboardMovementSystem(key => {
-			switch ( key ) {
-				case Controls.MoveLeft: return Point2D.Left;
-				case Controls.MoveRight: return Point2D.Right;
+		public static ISystem PlayerKeyboardMovement => new KeyboardMovementSystem(
+			new KeyboardMovementConfig((key) => {
+				switch ( key ) {
+					case Controls.MoveLeft: return Point2D.Left;
+					case Controls.MoveRight: return Point2D.Right;
+				}
+				return default;
 			}
-			return default;
-		});
+		));
 
-		public static ISystem PreventSpawnCollisions => new PreventSpawnCollisionSystem(Obstacle, Health, Bonus);
+		public static ISystem PreventSpawnCollisions =>
+			new PreventSpawnCollisionSystem(new PreventSpawnCollisionConfig(Obstacle, Health, Bonus));
 
-		public static ISystem PreventHealthSpawnIfNotRequired => new PreventHealthSpawnSystem(Health, 3);
+		public static ISystem PreventHealthSpawnIfNotRequired =>
+			new PreventHealthSpawnSystem(new PreventHealthSpawnConfig(Health, 3));
 
 		public static ISystem[] SpawnItems => new ISystem[] {
-			new SpawnSystem(Health, (e, origin) => {
+			new SpawnSystem(new SpawnConfig(Health, (e, origin) => {
 				e.SolidRender(origin, Color.Green).Falling(0.75).With(new ItemComponent(HealthItem));
-			}),
-			new SpawnSystem(Bonus, (e, origin) => {
+			})),
+			new SpawnSystem(new SpawnConfig(Bonus, (e, origin) => {
 				e.SolidRender(origin, Color.Red).Falling(0.75).With(new ItemComponent(BonusItem));
-			}),
+			})),
 		};
 
-		public static ISystem SpawnObstacles => new SpawnSystem(Obstacle, (e, origin) => {
+		public static ISystem SpawnObstacles => new SpawnSystem(new SpawnConfig(Obstacle, (e, origin) => {
 			e.SolidRender(origin, Color.Indigo).Falling(0.5).With(new DamageComponent()).With(new HealthComponent());
-		});
+		}));
 
 		public static ISystem[] PlayerShoots => new ISystem[] {
-			new KeyboardSpawnSystem(Controls.Shoot, Bullet),
-			new SpawnSystem(Bullet, (e, origin) => {
+			new KeyboardSpawnSystem(new KeyboardSpawnConfig(Controls.Shoot, Bullet)),
+			new SpawnSystem(new SpawnConfig(Bullet, (e, origin) => {
 				e.SolidRender(origin + Point2D.Up, Color.Red).Rising(0.33)
 					.With(new DamageComponent(layer: PlayerLayer))
 					.With(new TrailComponent(1.5, Color.Firebrick));
-			}),
+			})),
 		};
 
 		public static ISystem[] BonusBulletSpawn => new ISystem[] {
-			new UseItemSystem<SpawnBonusBulletEvent>(BonusItem),
-			new SpawnByEventSystem<SpawnBonusBulletEvent>(BonusBullet),
-			new SpawnSystem(BonusBullet, (e, origin) => {
+			new UseItemSystem<SpawnBonusBulletEvent>(new UseItemConfig(BonusItem)),
+			new SpawnByEventSystem<SpawnBonusBulletEvent>(new SpawnByEventConfig(BonusBullet)),
+			new SpawnSystem(new SpawnConfig(BonusBullet, (e, origin) => {
 				e.SolidRender(origin, Color.Red).Rising(0.15)
 					.With(new DamageComponent(layer: PlayerLayer, persistent: true))
 					.With(new TrailComponent(1.5, Color.Firebrick));
-			}),
+			})),
 		};
 
-		public static ISystem Healing => new UseItemSystem<AddHealthEvent>(HealthItem);
+		public static ISystem Healing =>
+			new UseItemSystem<AddHealthEvent>(new UseItemConfig(HealthItem));
 
 		public static ISystem HealthUI =>
-			new RenderPlayerHealthSystem(new Point2D(0, 0), Point2D.Right, health => {
-				if ( health >= 3 ) {
-					return Color.Green;
+			new RenderPlayerHealthSystem(new RenderPlayerHealthConfig(
+				new Point2D(0, 0), Point2D.Right, health => {
+					if ( health >= 3 ) {
+						return Color.Green;
+					}
+					return (health == 2) ? Color.Yellow : Color.Red;
 				}
-				return (health == 2) ? Color.Yellow : Color.Red;
-			});
+		));
 
-		public static void PrepareState(GameState state) {
-			state.AddTopLine((e, x, y) => e.Spawn(x, y, Obstacle).With(new RandomSpawnComponent(2, 5)));
-            state.AddTopLine((e, x, y) => e.Spawn(x, y, Health).With(new RandomSpawnComponent(20, 40)));
-            state.AddTopLine((e, x, y) => e.Spawn(x, y, Bonus).With(new RandomSpawnComponent(25, 70)));
-            state.AddBottomLine((e, x, y) => e.Spawn(x, y, BonusBullet));
-            using ( var editor = state.Entities.Edit() ) {
-              editor.AddEntity().SolidRender(new Point2D(4, 1), Color.Green)
-	              .With(new PlayerComponent())
-	              .With(new SpawnComponent(Bullet))
-	              .With(new KeyboardSpawnComponent())
-	              .With(new HealthComponent(health: 3, layer: PlayerLayer))
-	              .With(new KeyboardMovementComponent())
-	              .With(new InventoryComponent())
-	              .With(new FitInsideScreenComponent());
-            }
+		public static void PrepareState(ScreenConfig screen, EntitySet entities) {
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Obstacle).With(new RandomSpawnComponent(2, 5)));
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Health).With(new RandomSpawnComponent(20, 40)));
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Bonus).With(new RandomSpawnComponent(25, 70)));
+			entities.AddBottomLine(screen, (e, x, y) => e.Spawn(x, y, BonusBullet));
+			entities.Add().SolidRender(new Point2D(4, 1), Color.Green)
+				.With(new PlayerComponent())
+				.With(new SpawnComponent(Bullet))
+				.With(new KeyboardSpawnComponent())
+				.With(new HealthComponent(health: 3, layer: PlayerLayer))
+				.With(new KeyboardMovementComponent())
+				.With(new InventoryComponent())
+				.With(new FitInsideScreenComponent());
 		}
 
 		static Entity SolidRender(this Entity entity, Point2D origin, Color color) {
@@ -128,21 +134,15 @@ namespace ShootGame.Logic {
 			return entity;
 		}
 
-		static void AddTopLine(this GameState state, Action<Entity, int, int> entityCtor) {
-			using ( var editor = state.Entities.Edit() ) {
-				var screen = state.Graphics.Screen;
-				for ( var i = 0; i < state.Graphics.Screen.Width; i++ ) {
-					entityCtor(editor.AddEntity(), i, screen.Height - 1);
-				}
+		static void AddTopLine(this EntitySet entities, ScreenConfig screen, Action<Entity, int, int> entityCtor) {
+			for ( var i = 0; i < screen.Width; i++ ) {
+				entityCtor(entities.Add(), i, screen.Height - 1);
 			}
 		}
 
-		static void AddBottomLine(this GameState state, Action<Entity, int, int> entityCtor) {
-			using ( var editor = state.Entities.Edit() ) {
-				var screen = state.Graphics.Screen;
-				for ( var i = 0; i < screen.Width; i++ ) {
-					entityCtor(editor.AddEntity(), i, 0);
-				}
+		static void AddBottomLine(this EntitySet entities, ScreenConfig screen, Action<Entity, int, int> entityCtor) {
+			for ( var i = 0; i < screen.Width; i++ ) {
+				entityCtor(entities.Add(), i, 0);
 			}
 		}
 	}

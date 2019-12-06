@@ -1,10 +1,10 @@
-using SimpleECS.Core.State;
+using SimpleECS.Core.Entities;
 using SimpleECS.Core.Events;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class CleanUpEventSystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var entity in state.Entities.Get() ) {
+		public void Update(EntitySet entities) {
+			foreach ( var entity in entities.Get() ) {
 				entity.RemoveComponent(c => c is IEvent);
 			}
 		}

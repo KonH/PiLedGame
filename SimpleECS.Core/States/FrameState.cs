@@ -1,15 +1,17 @@
 using SimpleECS.Core.Common;
+using SimpleECS.Core.Components;
+using SimpleECS.Core.Configs;
 
-namespace SimpleECS.Core.State {
-	public sealed class Frame {
+namespace SimpleECS.Core.States {
+	public sealed class FrameState : IComponent {
 		Color[,] _value;
-
-		public Frame(Screen screen) {
-			_value = new Color[screen.Width, screen.Height];
-		}
 
 		public Color this[int x, int y] {
 			get { return _value[x, y]; }
+		}
+
+		public FrameState(ScreenConfig screen) {
+			_value = new Color[screen.Width, screen.Height];
 		}
 
 		public void ChangeAt(Point2D position, Color color) {

@@ -1,13 +1,12 @@
 using System;
 using System.Globalization;
-using SimpleECS.Core.Common;
 
-namespace SimpleECS.Core.State {
-	public sealed class InputFrame {
+namespace SimpleECS.Core.Common {
+	public sealed class FrameRecord {
 		public readonly double  Time;
 		public readonly KeyCode Key;
 
-		public InputFrame(double time, KeyCode key) {
+		public FrameRecord(double time, KeyCode key) {
 			Time = time;
 			Key  = key;
 		}
@@ -16,11 +15,11 @@ namespace SimpleECS.Core.State {
 			return $"{Time.ToString(CultureInfo.InvariantCulture)}={Key.ToString()}";
 		}
 
-		public static InputFrame Parse(string str) {
+		public static FrameRecord Parse(string str) {
 			var parts = str.Split('=');
 			var time = double.Parse(parts[0]);
 			var key = (KeyCode)Enum.Parse(typeof(KeyCode), parts[1]);
-			return new InputFrame(time, key);
+			return new FrameRecord(time, key);
 		}
 	}
 }

@@ -1,23 +1,28 @@
 using System.Collections.Generic;
-using SimpleECS.Core.State;
+using SimpleECS.Core.Common;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class FixedInputSystem : ISystem {
-		readonly Queue<InputFrame> _frames;
+		readonly Queue<FrameRecord> _frames2;
 
-		public FixedInputSystem(InputRecord record) {
-			_frames = new Queue<InputFrame>(record.Frames);
+		public FixedInputSystem(InputRecordConfig config) {
+			_frames2 = new Queue<FrameRecord>(config.Frames);
 		}
 
-		public void Update(GameState state) {
-			var time = state.Time.UnscaledTotalTime;
-			if ( _frames.Count == 0 ) {
+		public void Update(EntitySet entities) {
+			var time = entities.GetFirstComponent<TimeState>().UnscaledTotalTime;
+			if ( _frames2.Count == 0 ) {
 				return;
 			}
-			var frame = _frames.Peek();
+			var frame = _frames2.Peek();
 			if ( time > frame.Time ) {
-				state.Input.Assign(frame.Key);
-				_frames.Dequeue();
+				foreach ( var (_, input) in entities.Get<InputState>() ) {
+					input.Assign(frame.Key);
+				}
+				_frames2.Dequeue();
 			}
 		}
 	}

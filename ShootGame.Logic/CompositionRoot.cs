@@ -1,27 +1,35 @@
 using System;
-using SimpleECS.Core.State;
 using SimpleECS.Core.Systems;
 using SimpleECS.Core.Components;
 using ShootGame.Logic.Systems;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace ShootGame.Logic {
 	public sealed class CompositionRoot {
+		readonly ScreenConfig  _screen;
+		readonly DebugConfig   _debug;
 		readonly Configuration _config;
 
-		readonly Func<IReadInputSystem> _inputSystem;
-		readonly Func<ISystem>[]        _preRenderSystems;
-		readonly Func<IRealTimeSystem>  _realTimeSystem;
-		readonly Func<IRenderSystem>    _renderSystem;
+		readonly Func<BaseReadInputSystem>            _inputSystem;
+		readonly Func<ISystem>[]                      _preRenderSystems;
+		readonly Func<BaseFinishFrameRealTimeSystem>  _realTimeSystem;
+		readonly Func<BaseRenderSystem>               _renderSystem;
 
 		SystemSet _systems;
 
 
 		public CompositionRoot(
+			ScreenConfig screen,
+			DebugConfig debug,
 			Configuration config,
-			Func<IReadInputSystem> inputSystem,
+			Func<BaseReadInputSystem> inputSystem,
 			Func<ISystem>[] preRenderSystems,
-			Func<IRealTimeSystem> realTimeSystem,
-			Func<IRenderSystem> renderSystem) {
+			Func<BaseFinishFrameRealTimeSystem> realTimeSystem,
+			Func<BaseRenderSystem> renderSystem) {
+			_screen = screen;
+			_debug  = debug;
 			_config = config;
 
 			_inputSystem      = inputSystem;
@@ -32,26 +40,35 @@ namespace ShootGame.Logic {
 			_systems = new SystemSet();
 		}
 
-		public (GameState, SystemSet) Create() {
-			return (CreateState(_config), CreateSystems(_config));
+		public (EntitySet, SystemSet) Create() {
+			var entities = CreateState(_screen);
+			return (entities, CreateSystems(_config, _debug, _screen, entities));
 		}
 
-		GameState CreateState(Configuration config) {
-			var graphics = new Graphics(new Screen(8, 8));
-			var debug = new Debug(updateTime: 0.15f, maxLogSize: 20);
-			var random = (config.RandomSeed != 0) ? new Random(config.RandomSeed) : new Random();
-			var state = new GameState(graphics, debug, random);
-			GameLogic.PrepareState(state);
-			return state;
+		EntitySet CreateState(ScreenConfig screen) {
+			var entities = new EntitySet();
+			GameLogic.PrepareState(screen, entities);
+			return entities;
 		}
 
-		SystemSet CreateSystems(Configuration config) {
+		SystemSet CreateSystems(Configuration config, DebugConfig debug, ScreenConfig screen, EntitySet entities) {
+			entities.Add().AddComponent(new ExecutionState());
+			entities.Add().AddComponent(new InputState());
+			entities.Add().AddComponent(new TimeState());
+			entities.Add().AddComponent(new FrameState(screen));
+			if ( debug != null ) {
+				entities.Add().AddComponent(new DebugState(debug));
+			}
+			entities.Add().AddComponent(new RandomState((_config.RandomSeed != 0) ? new RandomConfig(_config.RandomSeed) : new RandomConfig()));
 			_systems = new SystemSet();
-			Add(new SpeedUpSystem(10.0, 0.25));
+			Add(new SpeedUpSystem(new SpeedUpConfig(10.0, 0.25)));
 			Add(new ResetInputSystem());
 			AddIf(config.IsPlaying, _inputSystem);
 			AddIf(config.IsReplayShow, () => new FixedInputSystem(config.SavedReplayRecord));
-			AddIf(config.IsReplayRecord, () => new SaveInputSystem(config.NewReplayRecord));
+			AddIf(config.IsReplayRecord, () => {
+				entities.Add().AddComponent(new InputRecordState());
+				return new SaveInputSystem();
+			});
 			Add(new ClearFrameSystem());
 			Add(GameLogic.PlayerKeyboardMovement);
 			Add(new InitRandomSpawnTimerSystem());
@@ -61,7 +78,7 @@ namespace ShootGame.Logic {
 			Add(new PerformRandomSpawnSystem());
 			Add(new LinearMovementSystem());
 			Add(new EventMovementSystem());
-			Add(new FitInsideScreenSystem());
+			Add(new FitInsideScreenSystem(screen));
 			Add(new CollisionSystem());
 			Add(GameLogic.PreventSpawnCollisions);
 			Add(GameLogic.PreventHealthSpawnIfNotRequired);
@@ -78,7 +95,7 @@ namespace ShootGame.Logic {
 			Add(new ScoreMeasureSystem());
 			Add(new DestroyCollectedItemSystem());
 			Add(new NoHealthDestroySystem());
-			Add(new OutOfBoundsDestroySystem());
+			Add(new OutOfBoundsDestroySystem(screen));
 			Add(new DestroyTriggeredDamageSystem());
 			Add(new DestroySystem());
 			Add(new GameOverSystem());
@@ -89,7 +106,7 @@ namespace ShootGame.Logic {
 			foreach ( var system in _preRenderSystems ) {
 				Add(system());
 			}
-			AddIf(config.IsReplayShow, () => new FinishFrameFixedTimeSystem(0.0005));
+			AddIf(config.IsReplayShow, () => new FinishFrameFixedTimeSystem(new FinishFrameFixedTimeConfig(0.0005)));
 			AddIf(config.IsPlaying, _realTimeSystem);
 			Add(_renderSystem());
 			Add(new CleanUpEventSystem());

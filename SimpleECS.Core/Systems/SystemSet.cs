@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using SimpleECS.Core.State;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class SystemSet {
@@ -14,16 +15,16 @@ namespace SimpleECS.Core.Systems {
 			return (T)_systems.Find(s => s is T);
 		}
 
-		public void Init(GameState state) {
+		public void Init(EntitySet entities) {
 			foreach ( var system in _systems ) {
 				var init = system as IInit;
-				init?.Init(state);
+				init?.Init(entities);
 			}
 		}
 
-		public void UpdateLoop(GameState state) {
+		public void UpdateLoop(EntitySet entities) {
 			while ( true ) {
-				var isFinished = UpdateOnce(state);
+				var isFinished = UpdateOnce(entities);
 				if ( isFinished ) {
 					TryDispose();
 					break;
@@ -31,23 +32,25 @@ namespace SimpleECS.Core.Systems {
 			}
 		}
 
-		public bool UpdateOnce(GameState state) {
-			Update(state);
-			if ( state.Execution.IsFinished ) {
+		public bool UpdateOnce(EntitySet entities) {
+			Update(entities);
+			var exec = entities.GetFirstComponent<ExecutionState>();
+			if ( (exec != null) && exec.IsFinished ) {
 				TryDispose();
 				return true;
 			}
 			return false;
 		}
 
-		void Update(GameState state) {
+		void Update(EntitySet entities) {
 			foreach ( var system in _systems ) {
 				try {
-					system.Update(state);
+					system.Update(entities);
 				}
 				catch ( Exception e ) {
-					if ( state.Debug != null ) {
-						state.Debug.Log(e.ToString());
+					var debug = entities.GetFirstComponent<DebugState>();
+					if ( debug != null ) {
+						debug.Log(e.ToString());
 					} else {
 						Console.Write(e.ToString());
 					}

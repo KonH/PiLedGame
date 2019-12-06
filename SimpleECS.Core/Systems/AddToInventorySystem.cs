@@ -1,11 +1,11 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class AddToInventorySystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var (_, inv, ev) in state.Entities.Get<InventoryComponent, AddItemEvent>() ) {
+	public sealed class AddToInventorySystem : ComponentSystem<InventoryComponent, AddItemEvent> {
+		public override void Update(List<(InventoryComponent, AddItemEvent)> components) {
+			foreach ( var (inv, ev) in components ) {
 				inv.AddItem(ev.Item);
 			}
 		}

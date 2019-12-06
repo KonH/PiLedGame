@@ -2,7 +2,7 @@ using UnityEngine;
 using SimpleECS.Core.Systems;
 
 namespace ShootGame.Unity {
-	class ReadUnityRealTimeSystem : FinishFrameRealTimeSystemBase {
+	class ReadUnityRealTimeSystem : BaseFinishFrameRealTimeSystem {
 		public override double TotalElapsedSeconds => Time.realtimeSinceStartup;
 	}
 }

@@ -3,7 +3,7 @@ using SimpleECS.Core.Common;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {
-	public sealed class ReadConsoleReadInputSystem : ReadInputSystemBase, ISystem {
+	public sealed class ReadConsoleReadInputSystem : BaseReadInputSystem {
 		public override (bool, KeyCode) TryReadKey() {
 			if ( !Console.KeyAvailable ) {
 				return (false, default);

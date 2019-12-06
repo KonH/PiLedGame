@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using SimpleECS.Core.State;
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class TrailRenderSystem : ISystem {
@@ -52,11 +52,13 @@ namespace SimpleECS.Core.Systems {
 		Dictionary<TrailComponent, TrailData> _data         = new Dictionary<TrailComponent, TrailData>();
 		List<TrailComponent>                  _outdatedData = new List<TrailComponent>();
 
-		public void Update(GameState state) {
-			var time = state.Time.TotalTime;
-			Update(time, state.Entities);
+		public void Update(EntitySet entities) {
+			var time = entities.GetFirstComponent<TimeState>().TotalTime;
+			Update(time, entities);
 			Trim(time);
-			Render(time, state.Graphics.Frame);
+			foreach ( var frame in entities.GetComponent<FrameState>() ) {
+				Render(time, frame);
+			}
 		}
 
 		void Update(double time, EntitySet entities) {
@@ -83,7 +85,7 @@ namespace SimpleECS.Core.Systems {
 			_outdatedData.Clear();
 		}
 
-		void Render(double time, Frame frame) {
+		void Render(double time, FrameState frame) {
 			foreach ( var p in _data ) {
 				var data = p.Value;
 				foreach ( var pos in data.Positions ) {

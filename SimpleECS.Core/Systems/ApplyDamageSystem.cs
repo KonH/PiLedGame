@@ -1,11 +1,11 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class ApplyDamageSystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var (_, damage, health) in state.Entities.Get<ApplyDamageEvent, HealthComponent>() ) {
+	public sealed class ApplyDamageSystem : ComponentSystem<ApplyDamageEvent, HealthComponent> {
+		public override void Update(List<(ApplyDamageEvent, HealthComponent)> components) {
+			foreach ( var (damage, health) in components ) {
 				health.Health -= damage.Value;
 			}
 		}

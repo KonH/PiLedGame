@@ -1,17 +1,25 @@
-using SimpleECS.Core.State;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {
-	public sealed class ConsoleTriggerSystem : ISystem {
+	public sealed class ConsoleTriggerSystem : IndependentSingleComponentSystem<DebugState, TimeState> {
+		readonly DebugConfig _debug;
+
 		double _lastTime = double.MinValue;
 
-		public void Update(GameState state) {
-			state.Debug.IsTriggered = ShouldTrigger(state);
+		public ConsoleTriggerSystem(DebugConfig debug) {
+			_debug = debug;
 		}
 
-		bool ShouldTrigger(GameState state) {
-			var nowTime = state.Time.TotalTime;
-			if ( nowTime > (_lastTime + state.Debug.UpdateTime) ) {
+		public override void Update(DebugState debug, TimeState time) {
+			debug.IsTriggered = ShouldTrigger(time);
+		}
+
+		bool ShouldTrigger(TimeState time) {
+			var nowTime = time.TotalTime;
+			if ( nowTime > (_lastTime + _debug.UpdateTime) ) {
 				_lastTime = nowTime;
 				return true;
 			}

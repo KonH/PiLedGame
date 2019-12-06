@@ -1,12 +1,14 @@
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
 using SimpleECS.Core.Events;
-using SimpleECS.Core.State;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class LinearMovementSystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var (entity, movement) in state.Entities.Get<LinearMovementComponent>() ) {
-				movement.Timer += state.Time.DeltaTime;
+		public void Update(EntitySet entities) {
+			var deltaTime = entities.GetFirstComponent<TimeState>().DeltaTime;
+			foreach ( var (entity, movement) in entities.Get<LinearMovementComponent>() ) {
+				movement.Timer += deltaTime;
 				if ( movement.Timer > movement.Interval ) {
 					movement.Timer -= movement.Interval;
 					entity.AddComponent(new MovementEvent(movement.Direction));

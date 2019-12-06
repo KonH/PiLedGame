@@ -1,11 +1,14 @@
-using SimpleECS.Core.State;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class GameOverSystem : ISystem {
-		public void Update(GameState state) {
-			if ( state.Entities.Get<PlayerComponent>().Count == 0 ) {
-				state.Execution.Finish();
+		public void Update(EntitySet entities) {
+			if ( entities.Get<PlayerComponent>().Count == 0 ) {
+				foreach ( var exec in entities.GetComponent<ExecutionState>() ) {
+					exec.Finish();
+				}
 			}
 		}
 	}

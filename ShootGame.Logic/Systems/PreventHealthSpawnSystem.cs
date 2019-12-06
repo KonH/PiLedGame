@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SimpleECS.Core.State;
-using SimpleECS.Core.Common;
+using ShootGame.Logic.Configs;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Systems;
 using SimpleECS.Core.Entities;
@@ -9,28 +8,26 @@ using SimpleECS.Core.Components;
 
 namespace ShootGame.Logic.Systems {
 	public sealed class PreventHealthSpawnSystem : ISystem {
-		readonly SpawnRequestType _request;
-		readonly int              _minHealth;
+		readonly PreventHealthSpawnConfig _config;
 
-		public PreventHealthSpawnSystem(SpawnRequestType request, int minHealth) {
-			_request   = request;
-			_minHealth = minHealth;
+		public PreventHealthSpawnSystem(PreventHealthSpawnConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			if ( IsHealthLimitReached(state.Entities.Get<PlayerComponent, HealthComponent>()) ) {
+		public void Update(EntitySet entities) {
+			if ( IsHealthLimitReached(entities.GetComponent<PlayerComponent, HealthComponent>()) ) {
 				return;
 			}
-			foreach ( var (entity, ev) in state.Entities.Get<SpawnEvent>() ) {
-				if ( ev.Request == _request ) {
+			foreach ( var (entity, ev) in entities.Get<SpawnEvent>() ) {
+				if ( ev.Request == _config.Request ) {
 					entity.RemoveComponent(ev);
 				}
 			}
 		}
 
-		bool IsHealthLimitReached(List<ValueTuple<Entity, PlayerComponent, HealthComponent>> players) {
-			foreach ( var (_, _, health) in players ) {
-				if ( health.Health < _minHealth ) {
+		bool IsHealthLimitReached(List<ValueTuple<PlayerComponent, HealthComponent>> players) {
+			foreach ( var (_, health) in players ) {
+				if ( health.Health < _config.MinHealth ) {
 					return true;
 				}
 			}

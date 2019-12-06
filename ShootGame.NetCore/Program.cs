@@ -5,29 +5,37 @@ using SimpleECS.ConsoleLayer.Utils;
 using SimpleECS.RaspberryPi.Systems;
 using ShootGame.Logic;
 using ShootGame.Logic.Systems;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.States;
+using SimpleECS.RaspberryPi.Configs;
 
 namespace ShootGame.NetCore {
 	static class Program {
 		static void Main(string[] args) {
+			var screen = new ScreenConfig(8, 8);
+			var debug = new DebugConfig(updateTime: 0.15f, maxLogSize: 20);
 			var config = ConfigurationLoader.Load(ArgumentSet.Parse(args));
 			var root = new CompositionRoot(
+				screen,
+				debug,
 				config,
 				() => new ReadConsoleReadInputSystem(),
 				new Func<ISystem>[] {
-					() => new ConsoleTriggerSystem(),
+					() => new ConsoleTriggerSystem(debug),
 					() => new ConsoleClearSystem(),
-					() => new ConsoleRenderSystem(),
+					() => new ConsoleRenderSystem(screen),
 					() => new ConsoleLogSystem()
 				},
 				() => new FinishFrameRealTimeSystem(),
-				() => new DeviceRenderSystem(172));
-			var (state, systems) = root.Create();
-			systems.Init(state);
-			systems.UpdateLoop(state);
+				() => new DeviceRenderSystem(screen, new DeviceRenderConfig(172)));
+			var (entities, systems) = root.Create();
+			systems.Init(entities);
+			systems.UpdateLoop(entities);
 			Console.WriteLine($"Your score is: {systems.Get<ScoreMeasureSystem>()?.TotalScore}");
-			Console.WriteLine($"Time: {state.Time.UnscaledTotalTime:0.00}");
+			Console.WriteLine($"Time: {entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
 			if ( config.IsReplayRecord ) {
-				config.NewReplayRecord.Save(config.NewReplayPath);
+				var replay = entities.GetFirstComponent<InputRecordState>();
+				replay.Save(config.NewReplayPath);
 			}
 		}
 	}

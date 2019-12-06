@@ -1,24 +1,23 @@
-using SimpleECS.Core.State;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class SpeedUpSystem : ISystem {
-		readonly double _interval;
-		readonly double _advance;
+	public sealed class SpeedUpSystem : SingleComponentSystem<TimeState> {
+		readonly SpeedUpConfig _config;
 
 		double _lastTime;
 
-		public SpeedUpSystem(double interval, double advance) {
-			_interval = interval;
-			_advance  = advance;
+		public SpeedUpSystem(SpeedUpConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			var time = state.Time.UnscaledTotalTime;
-			if ( (_lastTime + _interval) > time ) {
+		public override void Update(TimeState time) {
+			var totalTime = time.UnscaledTotalTime;
+			if ( (_lastTime + _config.Interval) > totalTime ) {
 				return;
 			}
-			_lastTime = time;
-			state.Time.TimeScale += _advance;
+			_lastTime = totalTime;
+			time.TimeScale += _config.Advance;
 		}
 	}
 }

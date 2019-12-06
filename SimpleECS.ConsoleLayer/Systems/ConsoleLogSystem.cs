@@ -1,16 +1,16 @@
 using System;
-using SimpleECS.Core.State;
+using SimpleECS.Core.States;
 using SimpleECS.Core.Systems;
 
 namespace SimpleECS.ConsoleLayer.Systems {
-	public sealed class ConsoleLogSystem : ISystem {
-		public void Update(GameState state) {
-			if ( !state.Debug.IsTriggered ) {
+	public sealed class ConsoleLogSystem : SingleComponentSystem<DebugState> {
+		public override void Update(DebugState debug) {
+			if ( !debug.IsTriggered ) {
 				return;
 			}
 			Console.WriteLine();
 			Console.WriteLine("OUTPUT:");
-			foreach ( var line in state.Debug.GetContent() ) {
+			foreach ( var line in debug.GetContent() ) {
 				Console.WriteLine(line);
 			}
 		}

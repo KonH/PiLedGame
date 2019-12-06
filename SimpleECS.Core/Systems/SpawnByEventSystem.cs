@@ -1,24 +1,25 @@
-using SimpleECS.Core.State;
-using SimpleECS.Core.Common;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class SpawnByEventSystem<T> : ISystem where T : class, IEvent {
-		readonly SpawnRequestType _request;
+		readonly SpawnByEventConfig _config;
 
-		public SpawnByEventSystem(SpawnRequestType request) {
-			_request = request;
+		public SpawnByEventSystem(SpawnByEventConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			var shouldTrigger = state.Entities.Get<T>().Count > 0;
+		public void Update(EntitySet entities) {
+			var shouldTrigger = entities.Get<T>().Count > 0;
 			if ( !shouldTrigger ) {
 				return;
 			}
-			foreach ( var (entity, spawn) in state.Entities.Get<SpawnComponent>() ) {
-				if ( spawn.Request == _request ) {
-					entity.AddComponent(new SpawnEvent(_request));
+			var request = _config.Request;
+			foreach ( var (entity, spawn) in entities.Get<SpawnComponent>() ) {
+				if ( spawn.Request == request ) {
+					entity.AddComponent(new SpawnEvent(request));
 				}
 			}
 		}

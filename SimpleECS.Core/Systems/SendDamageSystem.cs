@@ -1,11 +1,12 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class SendDamageSystem : ISystem {
-		public void Update(GameState state) {
-			foreach ( var (entity, damage, collision) in state.Entities.Get<DamageComponent, CollisionEvent>() ) {
+	public sealed class SendDamageSystem : EntityComponentSystem<DamageComponent, CollisionEvent> {
+		public override void Update(List<(Entity, DamageComponent, CollisionEvent)> entities) {
+			foreach ( var (entity, damage, collision) in entities ) {
 				var health = collision.Other.GetComponent<HealthComponent>();
 				if ( health == null ) {
 					continue;

@@ -1,11 +1,11 @@
 using System;
 using SimpleECS.Core.Common;
-using SimpleECS.Core.State;
+using SimpleECS.Core.States;
 using SoftwareRender.Core.Utils;
 
 namespace SoftwareRender.Core.Render {
 	public static class LineRenderer {
-		public static void DrawScreenLine(this Frame frame, int x0, int y0, int x1, int y1, Color color) {
+		public static void DrawScreenLine(this FrameState frame, int x0, int y0, int x1, int y1, Color color) {
 			var steep = NormalizeLine(ref x0, ref y0, ref x1, ref y1);
 			var dx = x1 - x0;
 			var dy = Math.Abs(y1 - y0);
@@ -22,7 +22,7 @@ namespace SoftwareRender.Core.Render {
 			}
 		}
 
-		public static void DrawScreenLineSmooth(this Frame frame, int x0, int y0, int x1, int y1, Color color) {
+		public static void DrawScreenLineSmooth(this FrameState frame, int x0, int y0, int x1, int y1, Color color) {
 			void DrawScreenPoint(bool swap, int vx, int vy, float intensity) {
 				if ( swap ) {
 					Common.Swap(ref vx, ref vy);

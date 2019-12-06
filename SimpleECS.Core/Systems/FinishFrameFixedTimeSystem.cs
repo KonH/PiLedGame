@@ -1,18 +1,22 @@
-using SimpleECS.Core.State;
+using System.Collections.Generic;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class FinishFrameFixedTimeSystem : ISystem {
-		readonly double _interval;
+	public sealed class FinishFrameFixedTimeSystem : ComponentSystem<TimeState> {
+		readonly FinishFrameFixedTimeConfig _config;
 
 		double _accum;
 
-		public FinishFrameFixedTimeSystem(double interval) {
-			_interval = interval;
+		public FinishFrameFixedTimeSystem(FinishFrameFixedTimeConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			_accum += _interval;
-			state.Time.UpdateFrameTime(_accum);
+		public override void Update(List<TimeState> components) {
+			_accum += _config.Interval;
+			foreach ( var time in components ) {
+				time.UpdateFrameTime(_accum);
+			}
 		}
 	}
 }

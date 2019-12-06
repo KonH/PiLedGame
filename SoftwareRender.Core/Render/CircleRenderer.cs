@@ -1,9 +1,9 @@
 using SimpleECS.Core.Common;
-using SimpleECS.Core.State;
+using SimpleECS.Core.States;
 
 namespace SoftwareRender.Core.Render {
 	public static class CircleRenderer {
-		public static void DrawScreenCircle(this Frame frame, int x0, int y0, int radius, Color color) {
+		public static void DrawScreenCircle(this FrameState frame, int x0, int y0, int radius, Color color) {
 			void DrawPoint(int xn, int yn) {
 				frame.DrawScreenPoint(xn, yn, color);
 			}

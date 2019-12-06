@@ -1,28 +1,23 @@
-using System;
-using SimpleECS.Core.State;
-using SimpleECS.Core.Common;
+using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Configs;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class SpawnSystem : ISystem {
-		readonly SpawnRequestType        _request;
-		readonly Action<Entity, Point2D> _spawnCallback;
+	public sealed class SpawnSystem : EditableComponentSystem<PositionComponent, SpawnEvent> {
+		readonly SpawnConfig _config;
 
-		public SpawnSystem(SpawnRequestType request, Action<Entity, Point2D> spawnCallback) {
-			_request       = request;
-			_spawnCallback = spawnCallback;
+		public SpawnSystem(SpawnConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			using ( var editor = state.Entities.Edit() ) {
-				foreach ( var (_, position, ev) in state.Entities.Get<PositionComponent, SpawnEvent>() ) {
-					if ( ev.Request != _request ) {
-						continue;
-					}
-					_spawnCallback(editor.AddEntity(), position.Point);
+		public override void Update(List<(PositionComponent, SpawnEvent)> entities, EntityEditor editor) {
+			foreach ( var (position, ev) in entities ) {
+				if ( ev.Request != _config.Request ) {
+					continue;
 				}
+				_config.SpawnCallback(editor.AddEntity(), position.Point);
 			}
 		}
 	}

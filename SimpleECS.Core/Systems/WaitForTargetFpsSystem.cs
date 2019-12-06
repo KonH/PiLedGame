@@ -1,17 +1,18 @@
 using System.Threading;
-using SimpleECS.Core.State;
+using SimpleECS.Core.Configs;
+using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class WaitForTargetFpsSystem : ISystem {
-		readonly double _targetTime;
+	public sealed class WaitForTargetFpsSystem : SingleComponentSystem<TimeState> {
+		readonly WaitForTargetFpsConfig _config;
 
-		public WaitForTargetFpsSystem(int targetFps) {
-			_targetTime = (double)1000 / targetFps;
+		public WaitForTargetFpsSystem(WaitForTargetFpsConfig config) {
+			_config = config;
 		}
 
-		public void Update(GameState state) {
-			var dt = state.Time.UnscaledDeltaTime;
-			var lag = _targetTime - dt;
+		public override void Update(TimeState time) {
+			var dt = time.UnscaledDeltaTime;
+			var lag = _config.TargetTime - dt;
 			if ( lag > 0 ) {
 				Thread.Sleep((int)(lag / 1000));
 			}
