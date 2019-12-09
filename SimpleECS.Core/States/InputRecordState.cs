@@ -9,7 +9,11 @@ namespace SimpleECS.Core.States {
 		public readonly List<FrameRecord> Frames = new List<FrameRecord>();
 
 		public void Save(string path) {
-			File.WriteAllLines(path, Frames.Select(f => f.ToString()));
+			File.WriteAllLines(path, GetLines());
+		}
+
+		public string[] GetLines() {
+			return Frames.Select(f => f.ToString()).ToArray();
 		}
 	}
 }
