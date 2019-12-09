@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
@@ -12,7 +11,7 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(List<(Entity, InventoryComponent)> entities) {
+		public override void Update(EntityComponentCollection<InventoryComponent> entities) {
 			foreach ( var (entity, inv) in entities ) {
 				if ( inv.TryGetItem(_config.Item) ) {
 					entity.AddComponent(new T());

@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Common;
+using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public abstract class BaseReadInputSystem : ComponentSystem<InputState> {
-		public override void Update(List<InputState> inputs) {
+		public override void Update(ComponentCollection<InputState> inputs) {
 			var (isAvailable, keyCode) = TryReadKey();
 			if ( !isAvailable ) {
 				return;

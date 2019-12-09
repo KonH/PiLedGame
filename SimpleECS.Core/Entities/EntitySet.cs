@@ -17,34 +17,18 @@ namespace SimpleECS.Core.Entities {
 			return editor.AddEntity();
 		}
 
-		public List<Entity> Get() {
+		public List<Entity> GetAll() {
 			return new List<Entity>(_entities);
 		}
 
-		public List<ValueTuple<Entity, T1>> Get<T1>()
+		public EntityComponentCollection<T1> Get<T1>()
 			where T1 : class, IComponent {
-			var result = new List<ValueTuple<Entity, T1>>();
-			foreach ( var entity in _entities ) {
-				var c1 = entity.GetComponent<T1>();
-				if ( c1 == null ) {
-					continue;
-				}
-				result.Add((entity, c1));
-			}
-			return result;
+			return new EntityComponentCollection<T1>(_entities);
 		}
 
-		public List<T1> GetComponent<T1>()
+		public ComponentCollection<T1> GetComponent<T1>()
 			where T1 : class, IComponent {
-			var result = new List<T1>();
-			foreach ( var entity in _entities ) {
-				var c1 = entity.GetComponent<T1>();
-				if ( c1 == null ) {
-					continue;
-				}
-				result.Add(c1);
-			}
-			return result;
+			return new ComponentCollection<T1>(_entities);
 		}
 
 		public ValueTuple<Entity, T1> GetFirst<T1>()
@@ -71,34 +55,16 @@ namespace SimpleECS.Core.Entities {
 			return default;
 		}
 
-		public List<ValueTuple<Entity, T1, T2>> Get<T1, T2>()
+		public EntityComponentCollection<T1, T2> Get<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			var result = new List<ValueTuple<Entity, T1, T2>>();
-			foreach ( var entity in _entities ) {
-				var c1 = entity.GetComponent<T1>();
-				var c2 = entity.GetComponent<T2>();
-				if ( (c1 == null) || (c2 == null) ) {
-					continue;
-				}
-				result.Add((entity, c1, c2));
-			}
-			return result;
+			return new EntityComponentCollection<T1, T2>(_entities);
 		}
 
-		public List<ValueTuple<T1, T2>> GetComponent<T1, T2>()
+		public ComponentCollection<T1, T2> GetComponent<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			var result = new List<ValueTuple<T1, T2>>();
-			foreach ( var entity in _entities ) {
-				var c1 = entity.GetComponent<T1>();
-				var c2 = entity.GetComponent<T2>();
-				if ( (c1 == null) || (c2 == null) ) {
-					continue;
-				}
-				result.Add((c1, c2));
-			}
-			return result;
+			return new ComponentCollection<T1, T2>(_entities);
 		}
 
 		public ValueTuple<T1, T2> GetFirstComponent<T1, T2>()
@@ -115,21 +81,11 @@ namespace SimpleECS.Core.Entities {
 			return default;
 		}
 
-		public List<ValueTuple<Entity, T1, T2, T3>> Get<T1, T2, T3>()
+		public EntityComponentCollection<T1, T2, T3> Get<T1, T2, T3>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent
 			where T3 : class, IComponent {
-			var result = new List<ValueTuple<Entity, T1, T2, T3>>();
-			foreach ( var entity in _entities ) {
-				var c1 = entity.GetComponent<T1>();
-				var c2 = entity.GetComponent<T2>();
-				var c3 = entity.GetComponent<T3>();
-				if ( (c1 == null) || (c2 == null) || (c3 == null) ) {
-					continue;
-				}
-				result.Add((entity, c1, c2, c3));
-			}
-			return result;
+			return new EntityComponentCollection<T1, T2, T3>(_entities);
 		}
 	}
 }

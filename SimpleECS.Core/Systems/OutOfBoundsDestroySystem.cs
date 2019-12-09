@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
@@ -12,7 +11,7 @@ namespace SimpleECS.Core.Systems {
 			_screen = screen;
 		}
 
-		public override void Update(List<(Entity, OutOfBoundsDestroyComponent, PositionComponent)> entities) {
+		public override void Update(EntityComponentCollection<OutOfBoundsDestroyComponent, PositionComponent> entities) {
 			var width = _screen.Width;
 			var height = _screen.Height;
 			foreach ( var (entity, _, position) in entities ) {

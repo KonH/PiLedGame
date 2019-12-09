@@ -1,5 +1,4 @@
 using SimpleECS.Core.Configs;
-using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
 using SimpleECS.Core.Systems;
 

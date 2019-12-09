@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Entities;
 
@@ -10,7 +9,7 @@ namespace SimpleECS.Core.Systems {
 			Update(filteredEntities);
 		}
 
-		public abstract void Update(List<(Entity, T)> entities);
+		public abstract void Update(EntityComponentCollection<T> entities);
 	}
 
 	public abstract class EntityComponentSystem<T1, T2> : ISystem
@@ -21,7 +20,7 @@ namespace SimpleECS.Core.Systems {
 			Update(filteredEntities);
 		}
 
-		public abstract void Update(List<(Entity, T1, T2)> entities);
+		public abstract void Update(EntityComponentCollection<T1, T2> entities);
 	}
 
 	public abstract class EntityComponentSystem<T1, T2, T3> : ISystem
@@ -33,6 +32,6 @@ namespace SimpleECS.Core.Systems {
 			Update(filteredEntities);
 		}
 
-		public abstract void Update(List<(Entity, T1, T2, T3)> entities);
+		public abstract void Update(EntityComponentCollection<T1, T2, T3> entities);
 	}
 }

@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShootGame.NetCore", "ShootG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareRender.Core", "SoftwareRender.Core\SoftwareRender.Core.csproj", "{64489F68-3EC0-4953-86D0-CF468C51BE7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleECS.Tests", "SimpleECS.Tests\SimpleECS.Tests.csproj", "{35A17D78-F8FC-4FED-B144-88A8018FEB18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{64489F68-3EC0-4953-86D0-CF468C51BE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64489F68-3EC0-4953-86D0-CF468C51BE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64489F68-3EC0-4953-86D0-CF468C51BE7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A17D78-F8FC-4FED-B144-88A8018FEB18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A17D78-F8FC-4FED-B144-88A8018FEB18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A17D78-F8FC-4FED-B144-88A8018FEB18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A17D78-F8FC-4FED-B144-88A8018FEB18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

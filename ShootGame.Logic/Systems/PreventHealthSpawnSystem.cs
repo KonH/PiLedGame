@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using ShootGame.Logic.Configs;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Systems;
@@ -25,7 +23,7 @@ namespace ShootGame.Logic.Systems {
 			}
 		}
 
-		bool IsHealthLimitReached(List<ValueTuple<PlayerComponent, HealthComponent>> players) {
+		bool IsHealthLimitReached(ComponentCollection<PlayerComponent, HealthComponent> players) {
 			foreach ( var (_, health) in players ) {
 				if ( health.Health < _config.MinHealth ) {
 					return true;

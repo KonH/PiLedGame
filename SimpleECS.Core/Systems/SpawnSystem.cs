@@ -12,7 +12,7 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(List<(PositionComponent, SpawnEvent)> entities, EntityEditor editor) {
+		public override void Update(ComponentCollection<PositionComponent, SpawnEvent> entities, EntityEditor editor) {
 			foreach ( var (position, ev) in entities ) {
 				if ( ev.Request != _config.Request ) {
 					continue;

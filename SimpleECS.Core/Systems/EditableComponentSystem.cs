@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Entities;
 
@@ -12,6 +11,6 @@ namespace SimpleECS.Core.Systems {
 			Update(filteredComponents, editor);
 		}
 
-		public abstract void Update(List<(T1, T2)> entities, EntityEditor editor);
+		public abstract void Update(ComponentCollection<T1, T2> entities, EntityEditor editor);
 	}
 }
