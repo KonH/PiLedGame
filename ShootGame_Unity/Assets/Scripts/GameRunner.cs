@@ -7,20 +7,91 @@ using ShootGame.Logic.Systems;
 using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
-
+using UnityEngine.Profiling;
 using Debug = UnityEngine.Debug;
 using KeyCode = SimpleECS.Core.Common.KeyCode;
 
 namespace ShootGame.Unity {
 	public class GameRunner : MonoBehaviour {
-		[SerializeField] UnityRenderer Renderer = null;
+		enum State {
+			Waiting,
+			Create,
+			Init,
+			Update,
+			Finish,
+			Disable,
+		}
+
+		[SerializeField] float         StartDelay      = 0.0f;
+		[SerializeField] float         EndDelay        = 0.0f;
+		[SerializeField] string        ReplayPath      = null;
+		[SerializeField] int           FramesPerUpdate = 1;
+		[SerializeField] int           RandomSeed      = 0;
+		[SerializeField] double        FixedFrameTime  = 0.0005;
+		[SerializeField] bool          ReplayRecord    = false;
+		[SerializeField] bool          ReplayShow      = false;
+		[SerializeField] UnityRenderer Renderer        = null;
 
 		EntitySet _entities;
 		SystemSet _systems;
+		State     _state;
+		float     _endTime;
 
-		void Awake() {
+		void Update() {
+			switch ( _state ) {
+				case State.Waiting: {
+					if ( Time.realtimeSinceStartup > StartDelay ) {
+						_state = State.Create;
+					}
+				}
+				break;
+
+				case State.Create: {
+					Profiler.BeginSample("Create");
+					Create();
+					Profiler.EndSample();
+					_state = State.Init;
+				}
+				break;
+
+				case State.Init: {
+					Profiler.BeginSample("Init");
+					Init();
+					Profiler.EndSample();
+					_state = State.Update;
+				}
+				break;
+
+				case State.Update: {
+					Profiler.BeginSample("UpdateFrames");
+					UpdateFrames();
+					Profiler.EndSample();
+				}
+				break;
+
+				case State.Finish: {
+					if ( Time.realtimeSinceStartup > (_endTime + EndDelay) ) {
+						_state = State.Disable;
+					}
+				}
+				break;
+
+				case State.Disable: {
+					_state = State.Disable;
+					enabled = false;
+					Debug.Break();
+				}
+				break;
+			}
+		}
+
+		void Create() {
+			InputRecordConfig replayRecord = null;
+			if ( ReplayShow ) {
+				replayRecord = new InputRecordConfig(ReplayPath);
+			}
 			var screen = new ScreenConfig(8, 8);
-			var config = new Configuration(false, null, null, 0);
+			var config = new Configuration(ReplayRecord, replayRecord, null, RandomSeed, FixedFrameTime);
 			var root = new CompositionRoot(
 				screen,
 				null,
@@ -36,18 +107,32 @@ namespace ShootGame.Unity {
 			(_entities, _systems) = root.Create();
 		}
 
-		void Start() {
+		void Init() {
 			_systems.Init(_entities);
 		}
 
-		void Update() {
+		void UpdateFrames() {
+			for ( var i = 0; i < FramesPerUpdate; i++ ) {
+				if ( UpdateOneFrame() ) {
+					return;
+				}
+			}
+		}
+
+		bool UpdateOneFrame() {
 			var isFinished = _systems.UpdateOnce(_entities);
 			if ( isFinished ) {
 				_systems.TryDispose();
 				Debug.Log($"Your score is: {_systems.Get<ScoreMeasureSystem>()?.TotalScore}");
 				Debug.Log($"Time: {_entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
-				enabled = false;
+				if ( ReplayRecord ) {
+					var state = _entities.GetFirstComponent<InputRecordState>();
+					state.Save(ReplayPath);
+				}
+				_state = State.Finish;
+				_endTime = Time.realtimeSinceStartup;
 			}
+			return isFinished;
 		}
 	}
 }
