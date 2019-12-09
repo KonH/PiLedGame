@@ -17,7 +17,7 @@ namespace ShootGame.NetCore {
 			if ( isReplayRecord && (replayPath == null) ) {
 				throw new InvalidOperationException("Replay path should be set to record replay!");
 			}
-			return new Configuration(isReplayRecord, savedReplayRecord, replayPath, randomSeed);
+			return new Configuration(isReplayRecord, savedReplayRecord, replayPath, randomSeed, 0.0005);
 		}
 	}
 }

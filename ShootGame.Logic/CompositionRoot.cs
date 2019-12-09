@@ -106,7 +106,7 @@ namespace ShootGame.Logic {
 			foreach ( var system in _preRenderSystems ) {
 				Add(system());
 			}
-			AddIf(config.IsReplayShow, () => new FinishFrameFixedTimeSystem(new FinishFrameFixedTimeConfig(0.0005)));
+			AddIf(config.IsReplayShow, () => new FinishFrameFixedTimeSystem(new FinishFrameFixedTimeConfig(_config.FixedFrameTime)));
 			AddIf(config.IsPlaying, _realTimeSystem);
 			Add(_renderSystem());
 			Add(new CleanUpEventSystem());
