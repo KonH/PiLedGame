@@ -1,3 +1,3 @@
 namespace SimpleECS.Core.Events {
-	public sealed class CollectItemEvent : BaseEvent {}
+	public sealed class CollectItemEvent : IEvent {}
 }

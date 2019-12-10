@@ -24,6 +24,11 @@ namespace SimpleECS.Core.Entities {
 			_componentCache.Release(component);
 		}
 
+		public void RemoveComponent(object component) {
+			_components.Remove((IComponent)component);
+			_componentCache.Release(component.GetType(), component);
+		}
+
 		public T GetComponent<T>() where T : class, IComponent {
 			foreach ( var component in _components ) {
 				if ( component is T tComponent ) {

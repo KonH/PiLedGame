@@ -1,3 +1,3 @@
 namespace SimpleECS.Core.Events {
-	public class TimerTickEvent : BaseEvent {}
+	public class TimerTickEvent : IEvent {}
 }

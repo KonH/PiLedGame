@@ -4,7 +4,7 @@ using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class UseItemSystem<T> : EntityComponentSystem<InventoryComponent> where T : BaseEvent, new() {
+	public sealed class UseItemSystem<T> : EntityComponentSystem<InventoryComponent> where T : class, IEvent, new() {
 		readonly UseItemConfig _config;
 
 		public UseItemSystem(UseItemConfig config) {

@@ -4,7 +4,7 @@ using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class SpawnByEventSystem<T> : ISystem where T : BaseEvent {
+	public sealed class SpawnByEventSystem<T> : ISystem where T : class, IEvent, new() {
 		readonly SpawnByEventConfig _config;
 
 		public SpawnByEventSystem(SpawnByEventConfig config) {
