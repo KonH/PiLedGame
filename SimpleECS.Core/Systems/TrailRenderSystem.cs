@@ -3,18 +3,22 @@ using SimpleECS.Core.Common;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.States;
+using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class TrailRenderSystem : ISystem {
+		Cache<TrailData> _cache = new Cache<TrailData>(16);
+
 		class TrailData {
-			public List<PositionData> Positions = new List<PositionData>();
+			public List<PositionData> Positions = new List<PositionData>(8);
 
-			readonly Color  _color;
-			readonly double _wantedTime;
+			Color  _color;
+			double _wantedTime;
 
-			public TrailData(Color color, double wantedTime) {
+			public TrailData Init(Color color, double wantedTime) {
 				_color      = color;
 				_wantedTime = wantedTime;
+				return this;
 			}
 
 			public void TryAdd(double time, Point2D point) {
@@ -64,7 +68,7 @@ namespace SimpleECS.Core.Systems {
 		void Update(double time, EntitySet entities) {
 			foreach ( var (_, trail, position) in entities.Get<TrailComponent, PositionComponent>() ) {
 				if ( !_data.TryGetValue(trail, out var data) ) {
-					data = new TrailData(trail.Color, trail.WantedTime);
+					data = _cache.Hold().Init(trail.Color, trail.WantedTime);
 					_data.Add(trail, data);
 				}
 				data.TryAdd(time, position.Point);
@@ -80,6 +84,7 @@ namespace SimpleECS.Core.Systems {
 				}
 			}
 			foreach ( var trail in _outdatedData ) {
+				_cache.Release(_data[trail]);
 				_data.Remove(trail);
 			}
 			_outdatedData.Clear();
