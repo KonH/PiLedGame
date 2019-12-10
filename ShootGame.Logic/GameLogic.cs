@@ -46,23 +46,25 @@ namespace ShootGame.Logic {
 
 		public static ISystem[] SpawnItems => new ISystem[] {
 			new SpawnSystem(new SpawnConfig(Health, (e, origin) => {
-				e.SolidRender(origin, Color.Green).Falling(0.75).With(new ItemComponent().Init(HealthItem));
+				e.SolidRender(origin, Color.Green).Falling(0.75).AddComponent<ItemComponent>().Init(HealthItem);
 			})),
 			new SpawnSystem(new SpawnConfig(Bonus, (e, origin) => {
-				e.SolidRender(origin, Color.Red).Falling(0.75).With(new ItemComponent().Init(BonusItem));
+				e.SolidRender(origin, Color.Red).Falling(0.75).AddComponent<ItemComponent>().Init(BonusItem);
 			})),
 		};
 
 		public static ISystem SpawnObstacles => new SpawnSystem(new SpawnConfig(Obstacle, (e, origin) => {
-			e.SolidRender(origin, Color.Indigo).Falling(0.5).With(new DamageComponent().Init()).With(new HealthComponent().Init());
+			e.SolidRender(origin, Color.Indigo).Falling(0.5);
+			e.AddComponent<DamageComponent>().Init();
+			e.AddComponent<HealthComponent>().Init();
 		}));
 
 		public static ISystem[] PlayerShoots => new ISystem[] {
 			new KeyboardSpawnSystem(new KeyboardSpawnConfig(Controls.Shoot, Bullet)),
 			new SpawnSystem(new SpawnConfig(Bullet, (e, origin) => {
-				e.SolidRender(origin + Point2D.Up, Color.Red).Rising(0.33)
-					.With(new DamageComponent().Init(layer: PlayerLayer))
-					.With(new TrailComponent().Init(1.5, Color.Firebrick));
+				e.SolidRender(origin + Point2D.Up, Color.Red).Rising(0.33);
+				e.AddComponent<DamageComponent>().Init(layer: PlayerLayer);
+				e.AddComponent<TrailComponent>().Init(1.5, Color.Firebrick);
 			})),
 		};
 
@@ -70,9 +72,9 @@ namespace ShootGame.Logic {
 			new UseItemSystem<SpawnBonusBulletEvent>(new UseItemConfig(BonusItem)),
 			new SpawnByEventSystem<SpawnBonusBulletEvent>(new SpawnByEventConfig(BonusBullet)),
 			new SpawnSystem(new SpawnConfig(BonusBullet, (e, origin) => {
-				e.SolidRender(origin, Color.Red).Rising(0.15)
-					.With(new DamageComponent().Init(layer: PlayerLayer, persistent: true))
-					.With(new TrailComponent().Init(1.5, Color.Firebrick));
+				e.SolidRender(origin, Color.Red).Rising(0.15);
+				e.AddComponent<DamageComponent>().Init(layer: PlayerLayer, persistent: true);
+				e.AddComponent<TrailComponent>().Init(1.5, Color.Firebrick);
 			})),
 		};
 
@@ -90,42 +92,37 @@ namespace ShootGame.Logic {
 		));
 
 		public static void PrepareState(ScreenConfig screen, EntitySet entities) {
-			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Obstacle).With(new RandomSpawnComponent().Init(2, 5)));
-			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Health).With(new RandomSpawnComponent().Init(20, 40)));
-			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Bonus).With(new RandomSpawnComponent().Init(25, 70)));
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Obstacle).AddComponent<RandomSpawnComponent>().Init(2, 5));
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Health).AddComponent<RandomSpawnComponent>().Init(20, 40));
+			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Bonus).AddComponent<RandomSpawnComponent>().Init(25, 70));
 			entities.AddBottomLine(screen, (e, x, y) => e.Spawn(x, y, BonusBullet));
-			entities.Add().SolidRender(new Point2D(4, 1), Color.Green)
-				.With(new PlayerComponent())
-				.With(new SpawnComponent().Init(Bullet))
-				.With(new KeyboardSpawnComponent())
-				.With(new HealthComponent().Init(health: 3, layer: PlayerLayer))
-				.With(new KeyboardMovementComponent())
-				.With(new InventoryComponent())
-				.With(new FitInsideScreenComponent());
+			var entity = entities.Add();
+			entity.SolidRender(new Point2D(4, 1), Color.Green);
+			entity.AddComponent<PlayerComponent>();
+			entity.AddComponent<SpawnComponent>().Init(Bullet);
+			entity.AddComponent<KeyboardSpawnComponent>();
+			entity.AddComponent<HealthComponent>().Init(health: 3, layer: PlayerLayer);
+			entity.AddComponent<KeyboardMovementComponent>();
+			entity.AddComponent<InventoryComponent>();
+			entity.AddComponent<FitInsideScreenComponent>();
 		}
 
 		static Entity SolidRender(this Entity entity, Point2D origin, Color color) {
-			return entity
-				.With(new PositionComponent().Init(origin))
-				.With(new SolidBodyComponent())
-				.With(new RenderComponent().Init(color));
+			entity.AddComponent<PositionComponent>().Init(origin);
+			entity.AddComponent<SolidBodyComponent>();
+			entity.AddComponent<RenderComponent>().Init(color);
+			return entity;
 		}
 
 		static Entity Falling(this Entity entity, double interval) {
-			return entity
-				.With(new LinearMovementComponent().Init(Point2D.Down, interval))
-				.With(new OutOfBoundsDestroyComponent());
-		}
-
-		static Entity Rising(this Entity entity, double interval) {
-			return entity
-				.With(new LinearMovementComponent().Init(Point2D.Up, interval))
-				.With(new OutOfBoundsDestroyComponent());
-		}
-
-		static Entity With<T>(this Entity entity, T component) where T : class, IComponent, new() {
-			entity.AddComponent(component);
+			entity.AddComponent<LinearMovementComponent>().Init(Point2D.Down, interval);
+			entity.AddComponent<OutOfBoundsDestroyComponent>();
 			return entity;
+		}
+
+		static void Rising(this Entity entity, double interval) {
+			entity.AddComponent<LinearMovementComponent>().Init(Point2D.Up, interval);
+			entity.AddComponent<OutOfBoundsDestroyComponent>();
 		}
 
 		static Entity Spawn(this Entity entity, int x, int y, SpawnRequestType spawnRequest) {
