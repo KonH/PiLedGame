@@ -13,7 +13,7 @@ namespace SimpleECS.Core.Systems {
 					if ( leftPosition.Point != rightPosition.Point ) {
 						continue;
 					}
-					leftEntity.AddComponent(new CollisionEvent(rightEntity));
+					leftEntity.AddComponent<CollisionEvent>().Init(rightEntity);
 				}
 			}
 		}

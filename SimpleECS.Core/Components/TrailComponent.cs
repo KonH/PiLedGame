@@ -5,9 +5,10 @@ namespace SimpleECS.Core.Components {
 		public double WantedTime;
 		public Color  Color;
 
-		public TrailComponent(double wantedTime, Color color) {
+		public TrailComponent Init(double wantedTime, Color color) {
 			WantedTime = wantedTime;
 			Color      = color;
+			return this;
 		}
 	}
 }

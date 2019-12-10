@@ -11,7 +11,7 @@ namespace SimpleECS.Core.Systems {
 				}
 				var random = entities.GetFirstComponent<RandomState>();
 				var interval = Random(random, spawn.MinInterval, spawn.MaxInterval);
-				entity.AddComponent(new TimerComponent(interval));
+				entity.AddComponent<TimerComponent>().Init(interval);
 			}
 		}
 

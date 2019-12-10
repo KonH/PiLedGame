@@ -7,7 +7,7 @@ namespace SimpleECS.Core.Components {
 		public override void Update(EntityComponentCollection<DamageComponent, SendDamageEvent> entities) {
 			foreach ( var (entity, damage, _) in entities ) {
 				if ( !damage.Persistent ) {
-					entity.AddComponent(new DestroyEvent());
+					entity.AddComponent<DestroyEvent>();
 				}
 			}
 		}

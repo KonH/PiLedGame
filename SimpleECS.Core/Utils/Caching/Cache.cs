@@ -16,6 +16,10 @@ namespace SimpleECS.Core.Utils.Caching {
 			_free.Push(instance);
 		}
 
+		public void Release(object instance) {
+			Release((T)instance);
+		}
+
 		public void ReleaseAll() {
 			foreach ( var item in _used ) {
 				_free.Push(item);

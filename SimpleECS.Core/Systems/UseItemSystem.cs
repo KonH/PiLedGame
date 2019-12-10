@@ -4,7 +4,7 @@ using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class UseItemSystem<T> : EntityComponentSystem<InventoryComponent> where T : IEvent, new() {
+	public sealed class UseItemSystem<T> : EntityComponentSystem<InventoryComponent> where T : BaseEvent, new() {
 		readonly UseItemConfig _config;
 
 		public UseItemSystem(UseItemConfig config) {
@@ -14,7 +14,7 @@ namespace SimpleECS.Core.Systems {
 		public override void Update(EntityComponentCollection<InventoryComponent> entities) {
 			foreach ( var (entity, inv) in entities ) {
 				if ( inv.TryGetItem(_config.Item) ) {
-					entity.AddComponent(new T());
+					entity.AddComponent<T>();
 				}
 			}
 		}

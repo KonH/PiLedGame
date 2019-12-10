@@ -1,8 +1,8 @@
 namespace SimpleECS.Core.Events {
-	public sealed class ApplyDamageEvent : IEvent {
-		public int Value;
+	public sealed class ApplyDamageEvent : BaseEvent {
+		public int Value { get; private set; }
 
-		public ApplyDamageEvent(int value) {
+		public void Init(int value) {
 			Value = value;
 		}
 	}

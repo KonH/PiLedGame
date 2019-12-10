@@ -55,11 +55,11 @@ namespace ShootGame.Logic {
 			entities.Add().AddComponent(new ExecutionState());
 			entities.Add().AddComponent(new InputState());
 			entities.Add().AddComponent(new TimeState());
-			entities.Add().AddComponent(new FrameState(screen));
+			entities.Add().AddComponent(new FrameState().Init(screen));
 			if ( debug != null ) {
-				entities.Add().AddComponent(new DebugState(debug));
+				entities.Add().AddComponent(new DebugState().Init(debug));
 			}
-			entities.Add().AddComponent(new RandomState((_config.RandomSeed != 0) ? new RandomConfig(_config.RandomSeed) : new RandomConfig()));
+			entities.Add().AddComponent(new RandomState().Init((_config.RandomSeed != 0) ? new RandomConfig(_config.RandomSeed) : new RandomConfig()));
 			_systems = new SystemSet();
 			Add(new SpeedUpSystem(new SpeedUpConfig(10.0, 0.25)));
 			Add(new ResetInputSystem());

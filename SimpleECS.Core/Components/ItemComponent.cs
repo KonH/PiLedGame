@@ -2,10 +2,11 @@ using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Components {
 	public sealed class ItemComponent : IComponent {
-		public readonly ItemType Item;
+		public ItemType Item { get; private set; }
 
-		public ItemComponent(ItemType item) {
+		public ItemComponent Init(ItemType item) {
 			Item = item;
+			return this;
 		}
 	}
 }

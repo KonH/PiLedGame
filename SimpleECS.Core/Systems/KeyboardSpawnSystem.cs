@@ -17,7 +17,7 @@ namespace SimpleECS.Core.Systems {
 				var key = input.Current;
 				foreach ( var (entity, spawn, _) in entities.Get<SpawnComponent, KeyboardSpawnComponent>() ) {
 					if ( (key == _config.Key) && (spawn.Request == _config.Request) ) {
-						entity.AddComponent(new SpawnEvent(spawn.Request));
+						entity.AddComponent<SpawnEvent>().Init(spawn.Request);
 					}
 				}
 			}

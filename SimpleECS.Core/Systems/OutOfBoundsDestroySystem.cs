@@ -17,7 +17,7 @@ namespace SimpleECS.Core.Systems {
 			foreach ( var (entity, _, position) in entities ) {
 				var point = position.Point;
 				if ( (point.X < 0) || (point.X >= width) || (point.Y < 0) || (point.Y >= height) ) {
-					entity.AddComponent(new DestroyEvent());
+					entity.AddComponent<DestroyEvent>();
 				}
 			}
 		}

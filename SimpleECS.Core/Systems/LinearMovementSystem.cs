@@ -11,7 +11,7 @@ namespace SimpleECS.Core.Systems {
 				movement.Timer += deltaTime;
 				if ( movement.Timer > movement.Interval ) {
 					movement.Timer -= movement.Interval;
-					entity.AddComponent(new MovementEvent(movement.Direction));
+					entity.AddComponent<MovementEvent>().Init(movement.Direction);
 				}
 			}
 		}

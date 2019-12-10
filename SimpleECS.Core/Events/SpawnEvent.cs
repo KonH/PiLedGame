@@ -1,10 +1,10 @@
 using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Events {
-	public sealed class SpawnEvent : IEvent {
-		public readonly SpawnRequestType Request;
+	public sealed class SpawnEvent : BaseEvent {
+		public SpawnRequestType Request { get; private set; }
 
-		public SpawnEvent(SpawnRequestType request) {
+		public void Init(SpawnRequestType request) {
 			Request = request;
 		}
 	}

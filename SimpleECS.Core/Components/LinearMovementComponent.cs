@@ -6,9 +6,11 @@ namespace SimpleECS.Core.Components {
 		public double  Interval;
 		public double  Timer;
 
-		public LinearMovementComponent(Point2D direction, double interval) {
+		public LinearMovementComponent Init(Point2D direction, double interval) {
 			Direction = direction;
 			Interval  = interval;
+			Timer     = 0.0;
+			return this;
 		}
 	}
 }

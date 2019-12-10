@@ -10,8 +10,9 @@ namespace SimpleECS.Core.States {
 			get { return _value[x, y]; }
 		}
 
-		public FrameState(ScreenConfig screen) {
+		public FrameState Init(ScreenConfig screen) {
 			_value = new Color[screen.Width, screen.Height];
+			return this;
 		}
 
 		public void ChangeAt(Point2D position, Color color) {

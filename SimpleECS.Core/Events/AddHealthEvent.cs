@@ -1,3 +1,3 @@
 namespace SimpleECS.Core.Events {
-	public sealed class AddHealthEvent : IEvent {}
+	public sealed class AddHealthEvent : BaseEvent {}
 }

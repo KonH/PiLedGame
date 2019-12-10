@@ -7,7 +7,7 @@ namespace SimpleECS.Core.Systems {
 		public override void Update(EntityComponentCollection<TimerComponent> entities) {
 			foreach ( var (entity, timer) in entities ) {
 				if ( timer.Time >= timer.Interval ) {
-					entity.AddComponent(new TimerTickEvent());
+					entity.AddComponent<TimerTickEvent>();
 				}
 			}
 		}

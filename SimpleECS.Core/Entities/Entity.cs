@@ -1,21 +1,27 @@
-using System;
 using System.Collections.Generic;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Entities {
 	public sealed class Entity {
+		CacheScope _componentCache = null;
+
 		List<IComponent> _components = new List<IComponent>();
 
-		public void AddComponent(IComponent component) {
-			_components.Add(component);
+		public T AddComponent<T>() where T : class, IComponent, new() {
+			var instance = _componentCache.Hold<T>();
+			_components.Add(instance);
+			return instance;
 		}
 
-		public void RemoveComponent(IComponent component) {
+		public T AddComponent<T>(T instance) where T : class, IComponent, new() {
+			_components.Add(instance);
+			return instance;
+		}
+
+		public void RemoveComponent<T>(T component) where T : class, IComponent, new() {
 			_components.Remove(component);
-		}
-
-		public void RemoveComponent(Predicate<IComponent> condition) {
-			_components.RemoveAll(condition);
+			_componentCache.Release(component);
 		}
 
 		public T GetComponent<T>() where T : class, IComponent {
@@ -25,6 +31,17 @@ namespace SimpleECS.Core.Entities {
 				}
 			}
 			return null;
+		}
+
+		internal void Init(CacheScope componentCache) {
+			_componentCache = componentCache;
+		}
+
+		internal void Reset() {
+			foreach ( var component in _components ) {
+				_componentCache.Release(component.GetType(), component);
+			}
+			_components.Clear();
 		}
 	}
 }

@@ -10,8 +10,8 @@ namespace SimpleECS.Core.Systems {
 				if ( item == null ) {
 					continue;
 				}
-				collision.Other.AddComponent(new CollectItemEvent());
-				entity.AddComponent(new AddItemEvent(item.Item));
+				collision.Other.AddComponent<CollectItemEvent>();
+				entity.AddComponent<AddItemEvent>().Init(item.Item);
 			}
 		}
 	}

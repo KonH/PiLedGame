@@ -7,7 +7,7 @@ namespace SimpleECS.Core.Systems {
 		public override void Update(
 			EntityComponentCollection<SpawnComponent, RandomSpawnComponent, TimerTickEvent> entities) {
 			foreach ( var (entity, spawn, _, _) in entities ) {
-				entity.AddComponent(new SpawnEvent(spawn.Request));
+				entity.AddComponent<SpawnEvent>().Init(spawn.Request);
 			}
 		}
 	}

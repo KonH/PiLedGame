@@ -13,8 +13,8 @@ namespace SimpleECS.Core.Systems {
 				if ( damage.Layer == health.Layer ) {
 					continue;
 				}
-				entity.AddComponent(new SendDamageEvent());
-				collision.Other.AddComponent(new ApplyDamageEvent(damage.Damage));
+				entity.AddComponent<SendDamageEvent>();
+				collision.Other.AddComponent<ApplyDamageEvent>().Init(damage.Damage);
 			}
 		}
 	}

@@ -1,11 +1,12 @@
 namespace SimpleECS.Core.Components {
 	public sealed class RandomSpawnComponent : IComponent {
-		public readonly double MinInterval;
-		public readonly double MaxInterval;
+		public double MinInterval { get; private set; }
+		public double MaxInterval { get; private set; }
 
-		public RandomSpawnComponent(double minInterval, double maxInterval) {
+		public RandomSpawnComponent Init(double minInterval, double maxInterval) {
 			MinInterval = minInterval;
 			MaxInterval = maxInterval;
+			return this;
 		}
 	}
 }

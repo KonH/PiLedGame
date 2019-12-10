@@ -4,7 +4,7 @@ using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class SpawnByEventSystem<T> : ISystem where T : class, IEvent {
+	public sealed class SpawnByEventSystem<T> : ISystem where T : BaseEvent {
 		readonly SpawnByEventConfig _config;
 
 		public SpawnByEventSystem(SpawnByEventConfig config) {
@@ -19,7 +19,7 @@ namespace SimpleECS.Core.Systems {
 			var request = _config.Request;
 			foreach ( var (entity, spawn) in entities.Get<SpawnComponent>() ) {
 				if ( spawn.Request == request ) {
-					entity.AddComponent(new SpawnEvent(request));
+					entity.AddComponent<SpawnEvent>().Init(request);
 				}
 			}
 		}

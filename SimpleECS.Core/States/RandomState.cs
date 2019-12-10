@@ -4,11 +4,12 @@ using SimpleECS.Core.Configs;
 
 namespace SimpleECS.Core.States {
 	public sealed class RandomState : IComponent {
-		public readonly Random Generator;
+		public Random Generator { get; private set; }
 
-		public RandomState(RandomConfig config) {
+		public RandomState Init(RandomConfig config) {
 			var seed = config.Seed;
 			Generator = (seed != null) ? new Random(seed.Value) : new Random();
+			return this;
 		}
 	}
 }

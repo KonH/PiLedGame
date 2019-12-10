@@ -1,10 +1,10 @@
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Events {
-	public sealed class CollisionEvent : IEvent {
-		public readonly Entity Other;
+	public sealed class CollisionEvent : BaseEvent {
+		public Entity Other { get; private set; }
 
-		public CollisionEvent(Entity other) {
+		public void Init(Entity other) {
 			Other = other;
 		}
 	}

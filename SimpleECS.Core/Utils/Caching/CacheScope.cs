@@ -21,6 +21,13 @@ namespace SimpleECS.Core.Utils.Caching {
 			((Cache<T>)cache).Release(instance);
 		}
 
+		public void Release(Type type, object instance) {
+			if ( !_caches.TryGetValue(type, out var cache) ) {
+				return;
+			}
+			cache.Release(instance);
+		}
+
 		public void ReleaseAll() {
 			foreach ( var pair in _caches ) {
 				pair.Value.ReleaseAll();

@@ -1,10 +1,10 @@
 using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Events {
-	public sealed class AddItemEvent : IEvent {
-		public readonly ItemType Item;
+	public sealed class AddItemEvent : BaseEvent {
+		public ItemType Item { get; private set; }
 
-		public AddItemEvent(ItemType item) {
+		public void Init(ItemType item) {
 			Item = item;
 		}
 	}

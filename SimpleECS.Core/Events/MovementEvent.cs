@@ -1,10 +1,10 @@
 using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Events {
-	public sealed class MovementEvent : IEvent {
-		public readonly Point2D Offset;
+	public sealed class MovementEvent : BaseEvent {
+		public Point2D Offset { get; private set; }
 
-		public MovementEvent(Point2D offset) {
+		public void Init(Point2D offset) {
 			Offset = offset;
 		}
 	}

@@ -17,7 +17,7 @@ namespace SimpleECS.Core.Systems {
 			foreach ( var (entity, _) in entities.Get<KeyboardMovementComponent>() ) {
 				var offset = _config.KeyCodeToOffset(input);
 				if ( !offset.IsEmpty ) {
-					entity.AddComponent(new MovementEvent(offset));
+					entity.AddComponent<MovementEvent>().Init(offset);
 				}
 			}
 		}

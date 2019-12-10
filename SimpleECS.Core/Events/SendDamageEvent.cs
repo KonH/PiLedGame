@@ -1,3 +1,3 @@
 namespace SimpleECS.Core.Events {
-	public sealed class SendDamageEvent : IEvent {}
+	public sealed class SendDamageEvent : BaseEvent {}
 }

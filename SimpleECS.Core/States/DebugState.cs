@@ -4,14 +4,15 @@ using SimpleECS.Core.Configs;
 
 namespace SimpleECS.Core.States {
 	public sealed class DebugState : IComponent {
-		readonly DebugConfig _config;
+		DebugConfig _config;
 
 		public bool IsTriggered { get; set; }
 
 		List<string> _contents = new List<string>();
 
-		public DebugState(DebugConfig config) {
+		public DebugState Init(DebugConfig config) {
 			_config = config;
+			return this;
 		}
 
 		public void Log(string line) {

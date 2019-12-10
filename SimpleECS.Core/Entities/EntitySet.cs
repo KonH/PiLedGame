@@ -8,7 +8,7 @@ namespace SimpleECS.Core.Entities {
 		List<Entity> _entities = new List<Entity>();
 		EntityEditor _editor   = new EntityEditor();
 
-		CacheScope _cache = new CacheScope();
+		CacheScope _getCache = new CacheScope();
 
 		public EntityEditor Edit() {
 			_editor.Reset(_entities);
@@ -21,17 +21,17 @@ namespace SimpleECS.Core.Entities {
 		}
 
 		public EntityCollection GetAll() {
-			return new EntityCollection(_entities, _cache);
+			return new EntityCollection(_entities, _getCache);
 		}
 
 		public EntityComponentCollection<T1> Get<T1>()
 			where T1 : class, IComponent {
-			return new EntityComponentCollection<T1>(_entities, _cache);
+			return new EntityComponentCollection<T1>(_entities, _getCache);
 		}
 
 		public ComponentCollection<T1> GetComponent<T1>()
 			where T1 : class, IComponent {
-			return new ComponentCollection<T1>(_entities, _cache);
+			return new ComponentCollection<T1>(_entities, _getCache);
 		}
 
 		public ValueTuple<Entity, T1> GetFirst<T1>()
@@ -61,13 +61,13 @@ namespace SimpleECS.Core.Entities {
 		public EntityComponentCollection<T1, T2> Get<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			return new EntityComponentCollection<T1, T2>(_entities, _cache);
+			return new EntityComponentCollection<T1, T2>(_entities, _getCache);
 		}
 
 		public ComponentCollection<T1, T2> GetComponent<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			return new ComponentCollection<T1, T2>(_entities, _cache);
+			return new ComponentCollection<T1, T2>(_entities, _getCache);
 		}
 
 		public ValueTuple<T1, T2> GetFirstComponent<T1, T2>()
@@ -88,11 +88,11 @@ namespace SimpleECS.Core.Entities {
 			where T1 : class, IComponent
 			where T2 : class, IComponent
 			where T3 : class, IComponent {
-			return new EntityComponentCollection<T1, T2, T3>(_entities, _cache);
+			return new EntityComponentCollection<T1, T2, T3>(_entities, _getCache);
 		}
 
 		public void ReleaseGetCache() {
-			_cache.ReleaseAll();
+			_getCache.ReleaseAll();
 		}
 	}
 }

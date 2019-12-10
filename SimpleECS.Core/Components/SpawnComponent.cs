@@ -2,10 +2,11 @@ using SimpleECS.Core.Common;
 
 namespace SimpleECS.Core.Components {
 	public sealed class SpawnComponent : IComponent {
-		public readonly SpawnRequestType Request;
+		public SpawnRequestType Request { get; private set; }
 
-		public SpawnComponent(SpawnRequestType request) {
+		public SpawnComponent Init(SpawnRequestType request) {
 			Request = request;
+			return this;
 		}
 	}
 }

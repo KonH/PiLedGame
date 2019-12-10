@@ -12,12 +12,12 @@ namespace SimpleECS.Tests {
 		[SetUp]
 		public void Setup() {
 			_entities = new EntitySet();
-			_entities.Add().AddComponent(new Component1());
-			_entities.Add().AddComponent(new Component2());
-			_entities.Add().AddComponent(new Component1());
+			_entities.Add().AddComponent<Component1>();
+			_entities.Add().AddComponent<Component2>();
+			_entities.Add().AddComponent<Component1>();
 			var lastEntity = _entities.Add();
-			lastEntity.AddComponent(new Component1());
-			lastEntity.AddComponent(new Component2());
+			lastEntity.AddComponent<Component1>();
+			lastEntity.AddComponent<Component2>();
 		}
 
 		[Test]
