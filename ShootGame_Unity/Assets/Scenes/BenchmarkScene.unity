@@ -158,6 +158,7 @@ MonoBehaviour:
   FixedFrameTime: 0.05
   ReplayRecord: 0
   ReplayShow: 1
+  ShowCacheCounts: 0
   Renderer: {fileID: 1308908784}
 --- !u!4 &112351868
 Transform:

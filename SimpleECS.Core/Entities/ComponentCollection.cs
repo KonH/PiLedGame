@@ -7,7 +7,7 @@ using SimpleECS.Core.Utils.Caching;
 namespace SimpleECS.Core.Entities {
 	public struct ComponentCollection<T1> : IEnumerable<T1>
 		where T1 : class, IComponent {
-		sealed class Enumerator : IEnumerator<T1> {
+		public sealed class Enumerator : IEnumerator<T1> {
 			List<Entity> _entities;
 
 			int _index;
@@ -65,7 +65,7 @@ namespace SimpleECS.Core.Entities {
 	public struct ComponentCollection<T1, T2> : IEnumerable<ValueTuple<T1, T2>>
 		where T1 : class, IComponent
 		where T2 : class, IComponent {
-		sealed class Enumerator : IEnumerator<ValueTuple<T1, T2>> {
+		public sealed class Enumerator : IEnumerator<ValueTuple<T1, T2>> {
 			List<Entity> _entities;
 
 			int _index;

@@ -4,15 +4,20 @@ using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Entities {
 	public sealed class EntityEditor : IDisposable {
-		Cache<Entity> _entityCache    = new Cache<Entity>();
-		CacheScope    _componentCache = new CacheScope();
+		Cache<Entity> _entityCache    = null;
+		CacheScope    _componentCache = null;
 
 		List<Entity> _entities        = new List<Entity>();
 		List<Entity> _newEntities     = new List<Entity>();
 		List<Entity> _removedEntities = new List<Entity>();
 
-		public void Reset(List<Entity> entities) {
-			_entities = entities;
+		internal Cache<Entity> EntityCache    => _entityCache;
+		internal CacheScope    ComponentCache => _componentCache;
+
+		public void Reset(List<Entity> entities, Cache<Entity> entityCache, CacheScope componentCache) {
+			_entities       = entities;
+			_entityCache    = entityCache;
+			_componentCache = componentCache;
 			_newEntities.Clear();
 			_removedEntities.Clear();
 		}

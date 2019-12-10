@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using SimpleECS.Core.Systems;
 using ShootGame.Logic;
@@ -30,6 +31,7 @@ namespace ShootGame.Unity {
 		[SerializeField] double        FixedFrameTime  = 0.0005;
 		[SerializeField] bool          ReplayRecord    = false;
 		[SerializeField] bool          ReplayShow      = false;
+		[SerializeField] bool          ShowCacheCounts = false;
 		[SerializeField] UnityRenderer Renderer        = null;
 
 		EntitySet _entities;
@@ -79,6 +81,9 @@ namespace ShootGame.Unity {
 				case State.Disable: {
 					_state = State.Disable;
 					enabled = false;
+					if ( ShowCacheCounts ) {
+						DebugCacheCounts();
+					}
 					Debug.Break();
 				}
 				break;
@@ -133,6 +138,17 @@ namespace ShootGame.Unity {
 				_endTime = Time.realtimeSinceStartup;
 			}
 			return isFinished;
+		}
+
+		void DebugCacheCounts() {
+			var sb = new StringBuilder();
+			var data = _entities.GetDebugCacheInfo();
+			foreach ( var item in data ) {
+				foreach ( var pair in item ) {
+					sb.AppendFormat("{0} = {1}\n", pair.Key.FullName, pair.Value);
+				}
+			}
+			Debug.Log(sb.ToString());
 		}
 	}
 }

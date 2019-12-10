@@ -1,9 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleECS.Core.Utils.Caching {
-	sealed class CacheScope {
+	public sealed class CacheScope {
 		readonly Dictionary<Type, ICache> _caches = new Dictionary<Type, ICache>();
+
+		public CacheScope Init<T>(int capacity = 4) where T : class, new() {
+			_caches[typeof(T)] = new Cache<T>(capacity);
+			return this;
+		}
 
 		public T Hold<T>() where T : class, new() {
 			if ( !_caches.TryGetValue(typeof(T), out var cache) ) {
@@ -32,6 +38,10 @@ namespace SimpleECS.Core.Utils.Caching {
 			foreach ( var pair in _caches ) {
 				pair.Value.ReleaseAll();
 			}
+		}
+
+		public Dictionary<Type, int> GetTotalCounts() {
+			return _caches.ToDictionary(c => c.Key, c => c.Value.GetTotalCount());
 		}
 	}
 }

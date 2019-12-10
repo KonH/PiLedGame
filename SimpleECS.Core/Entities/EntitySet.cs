@@ -8,10 +8,24 @@ namespace SimpleECS.Core.Entities {
 		List<Entity> _entities = new List<Entity>();
 		EntityEditor _editor   = new EntityEditor();
 
-		CacheScope _getCache = new CacheScope();
+		Cache<Entity> _entityCache    = null;
+		CacheScope    _componentCache = null;
+		CacheScope    _getCache       = null;
+
+		public EntitySet() {
+			_entityCache    = new Cache<Entity>();
+			_componentCache = new CacheScope();
+			_getCache       = new CacheScope();
+		}
+
+		public EntitySet(Cache<Entity> entityCache, CacheScope componentCache, CacheScope getCache) {
+			_entityCache    = entityCache;
+			_componentCache = componentCache;
+			_getCache       = getCache;
+		}
 
 		public EntityEditor Edit() {
-			_editor.Reset(_entities);
+			_editor.Reset(_entities, _entityCache, _componentCache);
 			return _editor;
 		}
 
@@ -93,6 +107,15 @@ namespace SimpleECS.Core.Entities {
 
 		public void ReleaseGetCache() {
 			_getCache.ReleaseAll();
+		}
+
+		public Dictionary<Type, int>[] GetDebugCacheInfo() {
+			var result = new [] {
+				_getCache.GetTotalCounts(),
+				new Dictionary<Type, int> { { typeof(Entity), _editor.EntityCache.GetTotalCount() } },
+				_editor.ComponentCache.GetTotalCounts(),
+			};
+			return result;
 		}
 	}
 }

@@ -1,10 +1,13 @@
 using System;
-using SimpleECS.Core.Systems;
-using SimpleECS.Core.Components;
+using ShootGame.Logic.Events;
 using ShootGame.Logic.Systems;
+using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
+using SimpleECS.Core.Events;
 using SimpleECS.Core.States;
+using SimpleECS.Core.Systems;
+using SimpleECS.Core.Utils.Caching;
 
 namespace ShootGame.Logic {
 	public sealed class CompositionRoot {
@@ -45,8 +48,68 @@ namespace ShootGame.Logic {
 			return (entities, CreateSystems(_config, _debug, _screen, entities));
 		}
 
+		(Cache<Entity> entityCache, CacheScope componentCache, CacheScope getCache) FillCaches() {
+			var entityCache = new Cache<Entity>(128);
+			var componentCache = new CacheScope()
+				.Init<PositionComponent>(256)
+				.Init<SpawnComponent>(64)
+				.Init<TimerComponent>(32)
+				.Init<TimerTickEvent>()
+				.Init<SpawnEvent>(32)
+				.Init<MovementEvent>()
+				.Init<CollisionEvent>(32)
+				.Init<SendDamageEvent>(32)
+				.Init<ApplyDamageEvent>(32)
+				.Init<AddItemEvent>()
+				.Init<CollectItemEvent>()
+				.Init<SpawnBonusBulletEvent>(16)
+				.Init<DestroyEvent>(32)
+				.Init<AddHealthEvent>();
+			var getCache = new CacheScope()
+				.Init<ComponentCollection<InputState>.Enumerator>()
+				.Init<ComponentCollection<FrameState>.Enumerator>()
+				.Init<EntityComponentCollection<SpawnComponent>.Enumerator>()
+				.Init<EntityComponentCollection<KeyboardMovementComponent>.Enumerator>()
+				.Init<EntityComponentCollection<RandomSpawnComponent>.Enumerator>()
+				.Init<EntityComponentCollection<TimerComponent>.Enumerator>()
+				.Init<EntityComponentCollection<TimerComponent, TimerTickEvent>.Enumerator>()
+				.Init<EntityComponentCollection<SpawnComponent, RandomSpawnComponent, TimerTickEvent>.Enumerator>()
+				.Init<EntityComponentCollection<LinearMovementComponent>.Enumerator>()
+				.Init<EntityComponentCollection<PositionComponent, MovementEvent>.Enumerator>()
+				.Init<ComponentCollection<FitInsideScreenComponent, PositionComponent>.Enumerator>()
+				.Init<EntityComponentCollection<PositionComponent, SolidBodyComponent>.Enumerator>(32)
+				.Init<EntityComponentCollection<SpawnEvent, CollisionEvent>.Enumerator>()
+				.Init<ComponentCollection<PlayerComponent, HealthComponent>.Enumerator>()
+				.Init<EntityComponentCollection<SpawnEvent>.Enumerator>()
+				.Init<ComponentCollection<PositionComponent, SpawnEvent>.Enumerator>(8)
+				.Init<EntityComponentCollection<SpawnComponent, KeyboardSpawnComponent>.Enumerator>()
+				.Init<EntityComponentCollection<InventoryComponent>.Enumerator>()
+				.Init<EntityComponentCollection<SpawnBonusBulletEvent>.Enumerator>()
+				.Init<EntityComponentCollection<DamageComponent, CollisionEvent>.Enumerator>()
+				.Init<ComponentCollection<ApplyDamageEvent, HealthComponent>.Enumerator>()
+				.Init<EntityComponentCollection<InventoryComponent, CollisionEvent>.Enumerator>()
+				.Init<ComponentCollection<InventoryComponent, AddItemEvent>.Enumerator>()
+				.Init<ComponentCollection<HealthComponent, AddHealthEvent>.Enumerator>()
+				.Init<EntityComponentCollection<HealthComponent, DestroyEvent>.Enumerator>()
+				.Init<EntityComponentCollection<AddItemEvent>.Enumerator>()
+				.Init<EntityComponentCollection<CollectItemEvent>.Enumerator>()
+				.Init<EntityComponentCollection<HealthComponent>.Enumerator>()
+				.Init<EntityComponentCollection<OutOfBoundsDestroyComponent, PositionComponent>.Enumerator>()
+				.Init<EntityComponentCollection<DamageComponent, SendDamageEvent>.Enumerator>()
+				.Init<EntityComponentCollection<DestroyEvent>.Enumerator>()
+				.Init<EntityComponentCollection<PlayerComponent>.Enumerator>()
+				.Init<EntityComponentCollection<TrailComponent, PositionComponent>.Enumerator>()
+				.Init<ComponentCollection<PositionComponent, RenderComponent>.Enumerator>()
+				.Init<EntityComponentCollection<InputState>.Enumerator>()
+				.Init<ComponentCollection<TimeState>.Enumerator>()
+				.Init<EntityCollection.Enumerator>()
+				.Init<ComponentCollection<ExecutionState>.Enumerator>();
+			return (entityCache, componentCache, getCache);
+		}
+
 		EntitySet CreateState(ScreenConfig screen) {
-			var entities = new EntitySet();
+			var (entityCache, componentCache, getCache) = FillCaches();
+			var entities = new EntitySet(entityCache, componentCache, getCache);
 			GameLogic.PrepareState(screen, entities);
 			return entities;
 		}
