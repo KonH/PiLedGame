@@ -2,16 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Entities {
 	public struct ComponentCollection<T1> : IEnumerable<T1>
 		where T1 : class, IComponent {
-		struct Enumerator : IEnumerator<T1> {
-			readonly List<Entity> _entities;
+		sealed class Enumerator : IEnumerator<T1> {
+			List<Entity> _entities;
 
 			int _index;
 
-			public Enumerator(List<Entity> entities) {
+			public void Init(List<Entity> entities) {
 				_entities = entities;
 				_index    = -1;
 
@@ -43,12 +44,18 @@ namespace SimpleECS.Core.Entities {
 		}
 
 		readonly List<Entity> _entities;
+		readonly CacheScope   _cache;
 
-		public ComponentCollection(List<Entity> entities) {
+		internal ComponentCollection(List<Entity> entities, CacheScope cache) {
 			_entities = entities;
+			_cache    = cache;
 		}
 
-		public IEnumerator<T1> GetEnumerator() => new Enumerator(_entities);
+		public IEnumerator<T1> GetEnumerator() {
+			var iter = _cache.Hold<Enumerator>();
+			iter.Init(_entities);
+			return iter;
+		}
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
@@ -58,12 +65,12 @@ namespace SimpleECS.Core.Entities {
 	public struct ComponentCollection<T1, T2> : IEnumerable<ValueTuple<T1, T2>>
 		where T1 : class, IComponent
 		where T2 : class, IComponent {
-		struct Enumerator : IEnumerator<ValueTuple<T1, T2>> {
-			readonly List<Entity> _entities;
+		sealed class Enumerator : IEnumerator<ValueTuple<T1, T2>> {
+			List<Entity> _entities;
 
 			int _index;
 
-			public Enumerator(List<Entity> entities) {
+			public void Init(List<Entity> entities) {
 				_entities = entities;
 				_index    = -1;
 
@@ -103,12 +110,18 @@ namespace SimpleECS.Core.Entities {
 		}
 
 		readonly List<Entity> _entities;
+		readonly CacheScope   _cache;
 
-		public ComponentCollection(List<Entity> entities) {
+		internal ComponentCollection(List<Entity> entities, CacheScope cache) {
 			_entities = entities;
+			_cache    = cache;
 		}
 
-		public IEnumerator<ValueTuple<T1, T2>> GetEnumerator() => new Enumerator(_entities);
+		public IEnumerator<ValueTuple<T1, T2>> GetEnumerator() {
+			var iter = _cache.Hold<Enumerator>();
+			iter.Init(_entities);
+			return iter;
+		}
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();

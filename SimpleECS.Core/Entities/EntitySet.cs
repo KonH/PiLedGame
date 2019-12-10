@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using SimpleECS.Core.Components;
+using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Entities {
 	public sealed class EntitySet {
 		List<Entity> _entities = new List<Entity>();
-		EntityEditor _editor = new EntityEditor();
+		EntityEditor _editor   = new EntityEditor();
+
+		CacheScope _cache = new CacheScope();
 
 		public EntityEditor Edit() {
 			_editor.Reset(_entities);
@@ -17,18 +20,18 @@ namespace SimpleECS.Core.Entities {
 			return editor.AddEntity();
 		}
 
-		public List<Entity> GetAll() {
-			return new List<Entity>(_entities);
+		public EntityCollection GetAll() {
+			return new EntityCollection(_entities, _cache);
 		}
 
 		public EntityComponentCollection<T1> Get<T1>()
 			where T1 : class, IComponent {
-			return new EntityComponentCollection<T1>(_entities);
+			return new EntityComponentCollection<T1>(_entities, _cache);
 		}
 
 		public ComponentCollection<T1> GetComponent<T1>()
 			where T1 : class, IComponent {
-			return new ComponentCollection<T1>(_entities);
+			return new ComponentCollection<T1>(_entities, _cache);
 		}
 
 		public ValueTuple<Entity, T1> GetFirst<T1>()
@@ -58,13 +61,13 @@ namespace SimpleECS.Core.Entities {
 		public EntityComponentCollection<T1, T2> Get<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			return new EntityComponentCollection<T1, T2>(_entities);
+			return new EntityComponentCollection<T1, T2>(_entities, _cache);
 		}
 
 		public ComponentCollection<T1, T2> GetComponent<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {
-			return new ComponentCollection<T1, T2>(_entities);
+			return new ComponentCollection<T1, T2>(_entities, _cache);
 		}
 
 		public ValueTuple<T1, T2> GetFirstComponent<T1, T2>()
@@ -85,7 +88,11 @@ namespace SimpleECS.Core.Entities {
 			where T1 : class, IComponent
 			where T2 : class, IComponent
 			where T3 : class, IComponent {
-			return new EntityComponentCollection<T1, T2, T3>(_entities);
+			return new EntityComponentCollection<T1, T2, T3>(_entities, _cache);
+		}
+
+		public void ReleaseGetCache() {
+			_cache.ReleaseAll();
 		}
 	}
 }

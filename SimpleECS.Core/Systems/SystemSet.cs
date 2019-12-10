@@ -56,6 +56,7 @@ namespace SimpleECS.Core.Systems {
 					}
 				}
 			}
+			entities.ReleaseGetCache();
 		}
 
 		public void TryDispose() {
