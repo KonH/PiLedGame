@@ -13,6 +13,9 @@ namespace SimpleECS.Core.Utils.Caching {
 		public Cache(int capacity) {
 			_free = new Stack<T>(capacity);
 			_used = new List<T>(capacity);
+			for ( var i = 0; i < capacity; i++ ) {
+				_free.Push(new T());
+			}
 		}
 
 		public T Hold() {
