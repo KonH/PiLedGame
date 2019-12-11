@@ -16,10 +16,14 @@ namespace SimpleECS.Core.Common {
 		}
 
 		public static FrameRecord Parse(string str) {
-			var parts = str.Split('=');
-			var time = double.Parse(parts[0]);
-			var key = (KeyCode)Enum.Parse(typeof(KeyCode), parts[1]);
-			return new FrameRecord(time, key);
+			try {
+				var parts = str.Split('=');
+				var time = double.Parse(parts[0]);
+				var key = (KeyCode) Enum.Parse(typeof(KeyCode), parts[1]);
+				return new FrameRecord(time, key);
+			} catch ( Exception e ) {
+				throw new Exception($"Failed to parse '{str}'", e);
+			}
 		}
 	}
 }
