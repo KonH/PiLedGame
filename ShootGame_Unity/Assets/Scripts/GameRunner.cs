@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using SimpleECS.Core.Systems;
@@ -85,6 +86,7 @@ namespace ShootGame.Unity {
 						DebugCacheCounts();
 					}
 					Debug.Break();
+					Application.Quit();
 				}
 				break;
 			}
@@ -93,7 +95,9 @@ namespace ShootGame.Unity {
 		void Create() {
 			InputRecordConfig replayRecord = null;
 			if ( ReplayShow ) {
-				replayRecord = new InputRecordConfig(ReplayPath);
+				var replayAsset = Resources.Load<TextAsset>(ReplayPath);
+				var lines = replayAsset.text.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+				replayRecord = new InputRecordConfig(lines);
 			}
 			var screen = new ScreenConfig(8, 8);
 			var config = new Configuration(ReplayRecord, replayRecord, null, RandomSeed, FixedFrameTime);
@@ -132,7 +136,7 @@ namespace ShootGame.Unity {
 				Debug.Log($"Time: {_entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
 				if ( ReplayRecord ) {
 					var state = _entities.GetFirstComponent<InputRecordState>();
-					state.Save(ReplayPath);
+					state.Save($"Assets/Resources/{ReplayPath}.txt");
 				}
 				_state = State.Finish;
 				_endTime = Time.realtimeSinceStartup;

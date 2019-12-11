@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartDelay: 5
-  EndDelay: 1
-  ReplayPath: Assets/replay.txt
+  EndDelay: 0.25
+  ReplayPath: replay
   FramesPerUpdate: 10
   RandomSeed: 42
   FixedFrameTime: 0.05
