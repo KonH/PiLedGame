@@ -53,8 +53,8 @@ namespace SimpleECS.Core.Systems {
 			}
 		}
 
-		Dictionary<TrailComponent, TrailData> _data         = new Dictionary<TrailComponent, TrailData>();
-		List<TrailComponent>                  _outdatedData = new List<TrailComponent>();
+		Dictionary<TrailComponent, TrailData> _data         = new Dictionary<TrailComponent, TrailData>(16);
+		List<TrailComponent>                  _outdatedData = new List<TrailComponent>(16);
 
 		public void Update(EntitySet entities) {
 			var time = entities.GetFirstComponent<TimeState>().TotalTime;
