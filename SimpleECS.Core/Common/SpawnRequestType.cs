@@ -9,7 +9,7 @@ namespace SimpleECS.Core.Common {
 		}
 
 		public bool Equals(SpawnRequestType other) {
-			return string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
+			return string.Equals(_value, other._value, StringComparison.Ordinal);
 		}
 
 		public override bool Equals(object obj) {

@@ -25,7 +25,12 @@ namespace SimpleECS.Core.Utils.Caching {
 		}
 
 		public void Release(T instance) {
-			_used.Remove(instance);
+			for ( var i = 0; i < _used.Count; i++ ) {
+				if ( _used[i] == instance ) {
+					_used.RemoveAt(i);
+					i--;
+				}
+			}
 			_free.Push(instance);
 		}
 
@@ -34,8 +39,8 @@ namespace SimpleECS.Core.Utils.Caching {
 		}
 
 		public void ReleaseAll() {
-			foreach ( var item in _used ) {
-				_free.Push(item);
+			for ( var i = 0; i < _used.Count; i++ ) {
+				_free.Push(_used[i]);
 			}
 			_used.Clear();
 		}

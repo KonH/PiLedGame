@@ -20,12 +20,22 @@ namespace SimpleECS.Core.Entities {
 		}
 
 		public void RemoveComponent<T>(T component) where T : class, IComponent, new() {
-			_components.Remove(component);
+			for ( var i = 0; i < _components.Count; i++ ) {
+				if ( _components[i] == component ) {
+					_components.RemoveAt(i);
+					i--;
+				}
+			}
 			_componentCache.Release(component);
 		}
 
 		public void RemoveComponent(object component) {
-			_components.Remove((IComponent)component);
+			for ( var i = 0; i < _components.Count; i++ ) {
+				if ( _components[i] == component ) {
+					_components.RemoveAt(i);
+					i--;
+				}
+			}
 			_componentCache.Release(component.GetType(), component);
 		}
 
