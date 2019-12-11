@@ -6,7 +6,7 @@ namespace SimpleECS.Core.Entities {
 	public sealed class Entity {
 		CacheScope _componentCache = null;
 
-		List<IComponent> _components = new List<IComponent>();
+		List<IComponent> _components = new List<IComponent>(16);
 
 		public T AddComponent<T>() where T : class, IComponent, new() {
 			var instance = _componentCache.Hold<T>();

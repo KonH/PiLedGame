@@ -7,9 +7,9 @@ namespace SimpleECS.Core.Entities {
 		Cache<Entity> _entityCache    = null;
 		CacheScope    _componentCache = null;
 
-		List<Entity> _entities        = new List<Entity>();
-		List<Entity> _newEntities     = new List<Entity>();
-		List<Entity> _removedEntities = new List<Entity>();
+		List<Entity> _entities        = null;
+		List<Entity> _newEntities     = new List<Entity>(16);
+		List<Entity> _removedEntities = new List<Entity>(16);
 
 		internal Cache<Entity> EntityCache    => _entityCache;
 		internal CacheScope    ComponentCache => _componentCache;
@@ -41,7 +41,12 @@ namespace SimpleECS.Core.Entities {
 			}
 			_newEntities.Clear();
 			foreach ( var entity in _removedEntities ) {
-				_entities.Remove(entity);
+				for ( var i = 0; i < _entities.Count; i++ ) {
+					if ( _entities[i] == entity ) {
+						_entities.RemoveAt(i);
+						i--;
+					}
+				}
 			}
 			_removedEntities.Clear();
 		}
