@@ -1,25 +1,23 @@
-using System;
-
 namespace SimpleECS.Core.Common {
 	public struct DamageLayer {
-		public bool IsEmpty => string.IsNullOrEmpty(_value);
+		public bool IsEmpty => _value <= 0;
 
-		readonly string _value;
+		readonly int _value;
 
-		DamageLayer(string value) {
+		DamageLayer(int value) {
 			_value = value;
 		}
 
 		public bool Equals(DamageLayer other) {
-			return string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
+			return _value == other._value;
 		}
 
 		public override bool Equals(object obj) {
-			return obj is DamageLayer other && Equals(other);
+			return (obj is DamageLayer other) && Equals(other);
 		}
 
 		public override int GetHashCode() {
-			return StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value);
+			return _value;
 		}
 
 		public static bool operator ==(DamageLayer left, DamageLayer right) {
@@ -30,7 +28,7 @@ namespace SimpleECS.Core.Common {
 			return !left.Equals(right);
 		}
 
-		public static DamageLayer Of(string value) {
+		public static DamageLayer Of(int value) {
 			return new DamageLayer(value);
 		}
 	}

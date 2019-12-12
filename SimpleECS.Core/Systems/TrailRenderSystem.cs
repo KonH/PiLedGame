@@ -10,7 +10,7 @@ namespace SimpleECS.Core.Systems {
 		Cache<TrailData> _cache = new Cache<TrailData>(16);
 
 		class TrailData {
-			public List<PositionData> Positions = new List<PositionData>(8);
+			public List<PositionData> Positions = new List<PositionData>(64);
 
 			Color  _color;
 			double _wantedTime;
@@ -55,6 +55,11 @@ namespace SimpleECS.Core.Systems {
 
 		Dictionary<TrailComponent, TrailData> _data         = new Dictionary<TrailComponent, TrailData>(16);
 		List<TrailComponent>                  _outdatedData = new List<TrailComponent>(16);
+
+		public TrailRenderSystem() {
+			// Hack to prevent further allocations
+			_data.GetEnumerator().MoveNext();
+		}
 
 		public void Update(EntitySet entities) {
 			var time = entities.GetFirstComponent<TimeState>().TotalTime;

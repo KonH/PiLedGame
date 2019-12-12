@@ -1,15 +1,13 @@
-using System;
-
 namespace SimpleECS.Core.Common {
 	public struct SpawnRequestType {
-		readonly string _value;
+		readonly int _value;
 
-		SpawnRequestType(string value) {
+		SpawnRequestType(int value) {
 			_value = value;
 		}
 
 		public bool Equals(SpawnRequestType other) {
-			return string.Equals(_value, other._value, StringComparison.Ordinal);
+			return _value == other._value;
 		}
 
 		public override bool Equals(object obj) {
@@ -17,7 +15,7 @@ namespace SimpleECS.Core.Common {
 		}
 
 		public override int GetHashCode() {
-			return StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value);
+			return _value;
 		}
 
 		public static bool operator ==(SpawnRequestType left, SpawnRequestType right) {
@@ -28,7 +26,7 @@ namespace SimpleECS.Core.Common {
 			return !left.Equals(right);
 		}
 
-		public static SpawnRequestType Of(string value) {
+		public static SpawnRequestType Of(int value) {
 			return new SpawnRequestType(value);
 		}
 	}

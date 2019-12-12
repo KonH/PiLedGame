@@ -17,13 +17,21 @@ namespace ShootGame.Logic {
 			public const KeyCode Shoot     = KeyCode.Spacebar;
 		}
 
-		static readonly DamageLayer PlayerLayer = DamageLayer.Of("playerLayer");
+		const int PlayerDamageLayer = 1;
 
-		static readonly SpawnRequestType Bullet      = SpawnRequestType.Of("bulletSpawn");
-		static readonly SpawnRequestType BonusBullet = SpawnRequestType.Of("bonusBulletSpawn");
-		static readonly SpawnRequestType Obstacle    = SpawnRequestType.Of("obstacleSpawn");
-		static readonly SpawnRequestType Health      = SpawnRequestType.Of("healthSpawn");
-		static readonly SpawnRequestType Bonus       = SpawnRequestType.Of("bonusSpawn");
+		static readonly DamageLayer PlayerLayer = DamageLayer.Of(PlayerDamageLayer);
+
+		const int BulletSpawnRequest      = 1;
+		const int BonusBulletSpawnRequest = 2;
+		const int ObstacleSpawnRequest    = 3;
+		const int HealthSpawnRequest      = 4;
+		const int BonusSpawnRequest       = 5;
+
+		static readonly SpawnRequestType Bullet      = SpawnRequestType.Of(BulletSpawnRequest);
+		static readonly SpawnRequestType BonusBullet = SpawnRequestType.Of(BonusBulletSpawnRequest);
+		static readonly SpawnRequestType Obstacle    = SpawnRequestType.Of(ObstacleSpawnRequest);
+		static readonly SpawnRequestType Health      = SpawnRequestType.Of(HealthSpawnRequest);
+		static readonly SpawnRequestType Bonus       = SpawnRequestType.Of(BonusSpawnRequest);
 
 		static readonly ItemType HealthItem = ItemType.Of("healthItem");
 		static readonly ItemType BonusItem  = ItemType.Of("bonusItem");
