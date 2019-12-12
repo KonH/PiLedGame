@@ -1,7 +1,6 @@
 using System;
 using ShootGame.Logic.Events;
 using ShootGame.Logic.States;
-using ShootGame.Logic.Systems;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
@@ -90,7 +89,7 @@ namespace ShootGame.Logic {
 				.Init<EntityComponentCollection<TimerComponent, TimerTickEvent>.Enumerator>()
 				.Init<EntityComponentCollection<SpawnComponent, RandomSpawnComponent, TimerTickEvent>.Enumerator>()
 				.Init<EntityComponentCollection<LinearMovementComponent>.Enumerator>()
-				.Init<EntityComponentCollection<PositionComponent, MovementEvent>.Enumerator>()
+				.Init<ComponentCollection<PositionComponent, MovementEvent>.Enumerator>()
 				.Init<ComponentCollection<FitInsideScreenComponent, PositionComponent>.Enumerator>()
 				.Init<EntityComponentCollection<PositionComponent, SolidBodyComponent>.Enumerator>(32)
 				.Init<EntityComponentCollection<SpawnEvent, CollisionEvent>.Enumerator>()
@@ -120,7 +119,10 @@ namespace ShootGame.Logic {
 				.Init<EntityCollection.Enumerator>()
 				.Init<ComponentCollection<ExecutionState>.Enumerator>()
 				.Init<ComponentCollection<AddScoreEvent>.Enumerator>()
-				.Init<EntityComponentCollection<AddItemEvent>.Enumerator>();
+				.Init<EntityComponentCollection<AddItemEvent>.Enumerator>()
+				.Init<ComponentCollection<PositionComponent, TrailComponent, MovementEvent>.Enumerator>()
+				.Init<ComponentCollection<RenderComponent, FadeRenderComponent>.Enumerator>()
+				.Init<EntityComponentCollection<RenderComponent, FadeRenderComponent>.Enumerator>();
 			return (entityCache, componentCache, getCache);
 		}
 
@@ -178,9 +180,9 @@ namespace ShootGame.Logic {
 			Add(new DestroyCollectedItemSystem());
 			Add(new OutOfBoundsDestroySystem(screen));
 			Add(new DestroyTriggeredDamageSystem());
+			Add(GameLogic.RenderTrails);
 			Add(new DestroySystem());
 			Add(new GameOverSystem());
-			Add(new TrailRenderSystem());
 			Add(new RenderFrameSystem());
 			Add(GameLogic.HealthUI);
 			Add(new FinishExecutionSystem());

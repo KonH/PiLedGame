@@ -38,6 +38,10 @@ namespace SimpleECS.Core.Common {
 			return new Point2D(p1.X + p2.X, p1.Y + p2.Y);
 		}
 
+		public static Point2D operator -(Point2D p1, Point2D p2) {
+			return new Point2D(p1.X - p2.X, p1.Y - p2.Y);
+		}
+
 		public static bool operator ==(Point2D p1, Point2D p2) {
 			return (p1.X == p2.X) && (p1.Y == p2.Y);
 		}

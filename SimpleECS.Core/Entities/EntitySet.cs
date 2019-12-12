@@ -84,6 +84,13 @@ namespace SimpleECS.Core.Entities {
 			return new ComponentCollection<T1, T2>(_entities, _getCache);
 		}
 
+		public ComponentCollection<T1, T2, T3> GetComponent<T1, T2, T3>()
+			where T1 : class, IComponent
+			where T2 : class, IComponent
+			where T3 : class, IComponent {
+			return new ComponentCollection<T1, T2, T3>(_entities, _getCache);
+		}
+
 		public ValueTuple<T1, T2> GetFirstComponent<T1, T2>()
 			where T1 : class, IComponent
 			where T2 : class, IComponent {

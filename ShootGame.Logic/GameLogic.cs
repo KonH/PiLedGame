@@ -105,6 +105,12 @@ namespace ShootGame.Logic {
 			new UpdateScoreSystem(),
 		};
 
+		public static ISystem[] RenderTrails => new ISystem[] {
+			new AddTrailRenderSystem(2.5),
+			new UpdateFadeRenderSystem(),
+			new RemoveHiddenFadeRenderSystem(),
+		};
+
 		public static void PrepareState(ScreenConfig screen, EntitySet entities) {
 			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Obstacle).AddComponent<RandomSpawnComponent>().Init(2, 5));
 			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Health).AddComponent<RandomSpawnComponent>().Init(20, 40));
