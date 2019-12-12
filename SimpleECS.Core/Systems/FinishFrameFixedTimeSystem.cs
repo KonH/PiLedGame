@@ -1,9 +1,8 @@
 using SimpleECS.Core.Configs;
-using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class FinishFrameFixedTimeSystem : ComponentSystem<TimeState> {
+	public sealed class FinishFrameFixedTimeSystem : SingleComponentSystem<TimeState> {
 		readonly FinishFrameFixedTimeConfig _config;
 
 		double _accum;
@@ -12,11 +11,9 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(ComponentCollection<TimeState> components) {
+		public override void Update(TimeState time) {
 			_accum += _config.Interval;
-			foreach ( var time in components ) {
-				time.UpdateFrameTime(_accum);
-			}
+			time.UpdateFrameTime(_accum);
 		}
 	}
 }

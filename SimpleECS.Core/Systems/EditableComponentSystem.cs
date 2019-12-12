@@ -8,10 +8,12 @@ namespace SimpleECS.Core.Systems {
 		public void Update(EntitySet entities) {
 			var filteredComponents = entities.GetComponent<T1, T2>();
 			using var editor = entities.Edit();
-			Update(filteredComponents, editor);
+			foreach ( var (c1, c2) in filteredComponents ) {
+				Update(c1, c2, editor);
+			}
 		}
 
-		public abstract void Update(ComponentCollection<T1, T2> entities, EntityEditor editor);
+		public abstract void Update(T1 component1, T2 component2, EntityEditor editor);
 	}
 
 	public abstract class EditableComponentSystem<T1, T2, T3> : ISystem
@@ -21,9 +23,11 @@ namespace SimpleECS.Core.Systems {
 		public void Update(EntitySet entities) {
 			var filteredComponents = entities.GetComponent<T1, T2, T3>();
 			using var editor = entities.Edit();
-			Update(filteredComponents, editor);
+			foreach ( var (c1, c2, c3) in filteredComponents ) {
+				Update(c1, c2, c3, editor);
+			}
 		}
 
-		public abstract void Update(ComponentCollection<T1, T2, T3> entities, EntityEditor editor);
+		public abstract void Update(T1 component1, T2 component2, T3 component3, EntityEditor editor);
 	}
 }

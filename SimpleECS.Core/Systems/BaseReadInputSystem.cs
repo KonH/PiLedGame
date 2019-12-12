@@ -1,17 +1,14 @@
 using SimpleECS.Core.Common;
-using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
 
 namespace SimpleECS.Core.Systems {
 	public abstract class BaseReadInputSystem : ComponentSystem<InputState> {
-		public override void Update(ComponentCollection<InputState> inputs) {
+		public override void Update(InputState input) {
 			var (isAvailable, keyCode) = TryReadKey();
 			if ( !isAvailable ) {
 				return;
 			}
-			foreach ( var input in inputs ) {
-				input.Assign(keyCode);
-			}
+			input.Assign(keyCode);
 		}
 
 		public abstract (bool, KeyCode) TryReadKey();

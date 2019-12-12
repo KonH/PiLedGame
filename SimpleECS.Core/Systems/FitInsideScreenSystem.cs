@@ -1,7 +1,6 @@
 using SimpleECS.Core.Common;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
-using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class FitInsideScreenSystem : ComponentSystem<FitInsideScreenComponent, PositionComponent> {
@@ -11,10 +10,8 @@ namespace SimpleECS.Core.Systems {
 			_screen = screen;
 		}
 
-		public override void Update(ComponentCollection<FitInsideScreenComponent, PositionComponent> components) {
-			foreach ( var (_, pos) in components ) {
-				pos.Point = FitInsideBorders(pos.Point, _screen);
-			}
+		public override void Update(FitInsideScreenComponent _, PositionComponent pos) {
+			pos.Point = FitInsideBorders(pos.Point, _screen);
 		}
 
 		static Point2D FitInsideBorders(Point2D point, ScreenConfig screen) {

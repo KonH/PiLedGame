@@ -11,14 +11,12 @@ namespace SimpleECS.Core.Systems {
 			_screen = screen;
 		}
 
-		public override void Update(EntityComponentCollection<OutOfBoundsDestroyComponent, PositionComponent> entities) {
+		public override void Update(Entity entity, OutOfBoundsDestroyComponent _, PositionComponent position) {
 			var width = _screen.Width;
 			var height = _screen.Height;
-			foreach ( var (entity, _, position) in entities ) {
-				var point = position.Point;
-				if ( (point.X < 0) || (point.X >= width) || (point.Y < 0) || (point.Y >= height) ) {
-					entity.AddComponent<DestroyEvent>();
-				}
+			var point = position.Point;
+			if ( (point.X < 0) || (point.X >= width) || (point.Y < 0) || (point.Y >= height) ) {
+				entity.AddComponent<DestroyEvent>();
 			}
 		}
 	}

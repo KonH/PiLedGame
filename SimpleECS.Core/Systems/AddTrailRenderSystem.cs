@@ -10,15 +10,13 @@ namespace SimpleECS.Core.Systems {
 			_decrease = decrease;
 		}
 
-		public override void Update(ComponentCollection<PositionComponent, TrailComponent, MovementEvent> entities, EntityEditor editor) {
-			foreach ( var (pos, trail, mov) in entities ) {
-				var oldPosition = pos.Point - mov.Offset;
-				var color = trail.Color;
-				var entity = editor.AddEntity();
-				entity.AddComponent<PositionComponent>().Init(oldPosition);
-				entity.AddComponent<RenderComponent>().Init(color);
-				entity.AddComponent<FadeRenderComponent>().Init(_decrease);
-			}
+		public override void Update(PositionComponent pos, TrailComponent trail, MovementEvent mov, EntityEditor editor) {
+			var oldPosition = pos.Point - mov.Offset;
+			var color = trail.Color;
+			var entity = editor.AddEntity();
+			entity.AddComponent<PositionComponent>().Init(oldPosition);
+			entity.AddComponent<RenderComponent>().Init(color);
+			entity.AddComponent<FadeRenderComponent>().Init(_decrease);
 		}
 	}
 }

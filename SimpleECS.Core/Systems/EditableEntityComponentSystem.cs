@@ -7,9 +7,11 @@ namespace SimpleECS.Core.Systems {
 		public void Update(EntitySet entities) {
 			var filteredEntities = entities.Get<T>();
 			using var editor = entities.Edit();
-			Update(filteredEntities, editor);
+			foreach ( var (e, c) in filteredEntities ) {
+				Update(e, c, editor);
+			}
 		}
 
-		public abstract void Update(EntityComponentCollection<T> entities, EntityEditor editor);
+		public abstract void Update(Entity entity, T component, EntityEditor editor);
 	}
 }

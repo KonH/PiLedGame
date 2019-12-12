@@ -12,11 +12,9 @@ namespace ShootGame.Logic.Systems {
 			_score = score;
 		}
 
-		public override void Update(EntityComponentCollection<HealthComponent, DestroyEvent> entities) {
-			foreach ( var (e, health, _) in entities ) {
-				if ( health.Layer.IsEmpty ) {
-					e.AddComponent<AddScoreEvent>().Init(_score);
-				}
+		public override void Update(Entity entity, HealthComponent health, DestroyEvent _) {
+			if ( health.Layer.IsEmpty ) {
+				entity.AddComponent<AddScoreEvent>().Init(_score);
 			}
 		}
 	}

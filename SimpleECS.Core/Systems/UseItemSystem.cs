@@ -11,11 +11,9 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(EntityComponentCollection<InventoryComponent> entities) {
-			foreach ( var (entity, inv) in entities ) {
-				if ( inv.TryGetItem(_config.Item) ) {
-					entity.AddComponent<T>();
-				}
+		public override void Update(Entity entity, InventoryComponent inventory) {
+			if ( inventory.TryGetItem(_config.Item) ) {
+				entity.AddComponent<T>();
 			}
 		}
 	}

@@ -3,10 +3,8 @@ using SimpleECS.Core.Events;
 
 namespace SimpleECS.Core.Systems {
 	public sealed class DestroyCollectedItemSystem : EntityComponentSystem<CollectItemEvent> {
-		public override void Update(EntityComponentCollection<CollectItemEvent> entities) {
-			foreach ( var (entity, _) in entities ) {
-				entity.AddComponent<DestroyEvent>();
-			}
+		public override void Update(Entity entity, CollectItemEvent component) {
+			entity.AddComponent<DestroyEvent>();
 		}
 	}
 }

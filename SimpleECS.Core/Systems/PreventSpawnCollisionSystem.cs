@@ -10,11 +10,9 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(EntityComponentCollection<SpawnEvent, CollisionEvent> entities) {
-			foreach ( var (entity, ev, _) in entities ) {
-				if ( _config.Requests.Contains(ev.Request) ) {
-					entity.RemoveComponent(ev);
-				}
+		public override void Update(Entity entity, SpawnEvent ev, CollisionEvent _) {
+			if ( _config.Requests.Contains(ev.Request) ) {
+				entity.RemoveComponent(ev);
 			}
 		}
 	}

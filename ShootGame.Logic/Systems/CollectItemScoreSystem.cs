@@ -11,10 +11,8 @@ namespace ShootGame.Logic.Systems {
 			_score = score;
 		}
 
-		public override void Update(EntityComponentCollection<AddItemEvent> entities) {
-			foreach ( var (e, _) in entities ) {
-				e.AddComponent<AddScoreEvent>().Init(_score);
-			}
+		public override void Update(Entity entity, AddItemEvent _) {
+			entity.AddComponent<AddScoreEvent>().Init(_score);
 		}
 	}
 }

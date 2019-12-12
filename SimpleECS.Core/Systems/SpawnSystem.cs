@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleECS.Core.Events;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.Components;
@@ -12,13 +11,11 @@ namespace SimpleECS.Core.Systems {
 			_config = config;
 		}
 
-		public override void Update(ComponentCollection<PositionComponent, SpawnEvent> entities, EntityEditor editor) {
-			foreach ( var (position, ev) in entities ) {
-				if ( ev.Request != _config.Request ) {
-					continue;
-				}
-				_config.SpawnCallback(editor.AddEntity(), position.Point);
+		public override void Update(PositionComponent position, SpawnEvent ev, EntityEditor editor) {
+			if ( ev.Request != _config.Request ) {
+				return;
 			}
+			_config.SpawnCallback(editor.AddEntity(), position.Point);
 		}
 	}
 }

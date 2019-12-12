@@ -4,11 +4,9 @@ using SimpleECS.Core.Systems;
 
 namespace SimpleECS.Core.Components {
 	public sealed class DestroyTriggeredDamageSystem : EntityComponentSystem<DamageComponent, SendDamageEvent> {
-		public override void Update(EntityComponentCollection<DamageComponent, SendDamageEvent> entities) {
-			foreach ( var (entity, damage, _) in entities ) {
-				if ( !damage.Persistent ) {
-					entity.AddComponent<DestroyEvent>();
-				}
+		public override void Update(Entity entity, DamageComponent damage, SendDamageEvent _) {
+			if ( !damage.Persistent ) {
+				entity.AddComponent<DestroyEvent>();
 			}
 		}
 	}

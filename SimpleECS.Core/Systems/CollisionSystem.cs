@@ -3,8 +3,9 @@ using SimpleECS.Core.Components;
 using SimpleECS.Core.Entities;
 
 namespace SimpleECS.Core.Systems {
-	public sealed class CollisionSystem : EntityComponentSystem<PositionComponent, SolidBodyComponent> {
-		public override void Update(EntityComponentCollection<PositionComponent, SolidBodyComponent> entities) {
+	public sealed class CollisionSystem : ISystem {
+		public void Update(EntitySet allEntities) {
+			var entities = allEntities.Get<PositionComponent, SolidBodyComponent>();
 			foreach ( var (leftEntity, leftPosition, _) in entities ) {
 				foreach ( var (rightEntity, rightPosition, _) in entities ) {
 					if ( leftEntity == rightEntity ) {
