@@ -4,7 +4,7 @@ using SimpleECS.ConsoleLayer.Systems;
 using SimpleECS.ConsoleLayer.Utils;
 using SimpleECS.RaspberryPi.Systems;
 using ShootGame.Logic;
-using ShootGame.Logic.Systems;
+using ShootGame.Logic.States;
 using SimpleECS.Core.Configs;
 using SimpleECS.Core.States;
 using SimpleECS.RaspberryPi.Configs;
@@ -31,7 +31,7 @@ namespace ShootGame.NetCore {
 			var (entities, systems) = root.Create();
 			systems.Init(entities);
 			systems.UpdateLoop(entities);
-			Console.WriteLine($"Your score is: {systems.Get<ScoreMeasureSystem>()?.TotalScore}");
+			Console.WriteLine($"Your score is: {entities.GetFirstComponent<ScoreState>()?.TotalScore}");
 			Console.WriteLine($"Time: {entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
 			if ( config.IsReplayRecord ) {
 				var replay = entities.GetFirstComponent<InputRecordState>();

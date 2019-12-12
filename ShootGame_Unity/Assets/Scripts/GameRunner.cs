@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using SimpleECS.Core.Systems;
 using ShootGame.Logic;
-using ShootGame.Logic.Systems;
+using ShootGame.Logic.States;
 using SimpleECS.Core.Configs;
 using SimpleECS.Core.Entities;
 using SimpleECS.Core.States;
@@ -39,6 +39,7 @@ namespace ShootGame.Unity {
 		SystemSet _systems;
 		State     _state;
 		float     _endTime;
+		bool      _isFinished;
 
 		void Update() {
 			switch ( _state ) {
@@ -73,6 +74,10 @@ namespace ShootGame.Unity {
 				break;
 
 				case State.Finish: {
+					if ( !_isFinished ) {
+						_isFinished = true;
+						WriteResults();
+					}
 					if ( Time.realtimeSinceStartup > (_endTime + EndDelay) ) {
 						_state = State.Disable;
 					}
@@ -123,25 +128,25 @@ namespace ShootGame.Unity {
 		void UpdateFrames() {
 			for ( var i = 0; i < FramesPerUpdate; i++ ) {
 				if ( UpdateOneFrame() ) {
+					_state   = State.Finish;
+					_endTime = Time.realtimeSinceStartup;
 					return;
 				}
 			}
 		}
 
 		bool UpdateOneFrame() {
-			var isFinished = _systems.UpdateOnce(_entities);
-			if ( isFinished ) {
-				_systems.TryDispose();
-				Debug.Log($"Your score is: {_systems.Get<ScoreMeasureSystem>()?.TotalScore}");
-				Debug.Log($"Time: {_entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
-				if ( ReplayRecord ) {
-					var state = _entities.GetFirstComponent<InputRecordState>();
-					state.Save($"Assets/Resources/{ReplayPath}.txt");
-				}
-				_state = State.Finish;
-				_endTime = Time.realtimeSinceStartup;
+			return _systems.UpdateOnce(_entities);
+		}
+
+		void WriteResults() {
+			_systems.TryDispose();
+			Debug.Log($"Your score is: {_entities.GetFirstComponent<ScoreState>()?.TotalScore}");
+			Debug.Log($"Time: {_entities.GetFirstComponent<TimeState>().UnscaledTotalTime:0.00}");
+			if ( ReplayRecord ) {
+				var state = _entities.GetFirstComponent<InputRecordState>();
+				state.Save($"Assets/Resources/{ReplayPath}.txt");
 			}
-			return isFinished;
 		}
 
 		void DebugCacheCounts() {

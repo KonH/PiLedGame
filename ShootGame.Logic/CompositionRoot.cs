@@ -1,5 +1,6 @@
 using System;
 using ShootGame.Logic.Events;
+using ShootGame.Logic.States;
 using ShootGame.Logic.Systems;
 using SimpleECS.Core.Components;
 using SimpleECS.Core.Configs;
@@ -77,7 +78,8 @@ namespace ShootGame.Logic {
 				.Init<LinearMovementComponent>(32)
 				.Init<OutOfBoundsDestroyComponent>(32)
 				.Init<DamageComponent>(16)
-				.Init<TrailComponent>(16);
+				.Init<TrailComponent>(16)
+				.Init<AddScoreEvent>(16);
 			var getCache = new CacheScope()
 				.Init<ComponentCollection<InputState>.Enumerator>()
 				.Init<ComponentCollection<FrameState>.Enumerator>()
@@ -116,7 +118,9 @@ namespace ShootGame.Logic {
 				.Init<EntityComponentCollection<InputState>.Enumerator>()
 				.Init<ComponentCollection<TimeState>.Enumerator>()
 				.Init<EntityCollection.Enumerator>()
-				.Init<ComponentCollection<ExecutionState>.Enumerator>();
+				.Init<ComponentCollection<ExecutionState>.Enumerator>()
+				.Init<ComponentCollection<AddScoreEvent>.Enumerator>()
+				.Init<EntityComponentCollection<AddItemEvent>.Enumerator>();
 			return (entityCache, componentCache, getCache);
 		}
 
@@ -132,6 +136,7 @@ namespace ShootGame.Logic {
 			entities.Add().AddComponent(new InputState());
 			entities.Add().AddComponent(new TimeState());
 			entities.Add().AddComponent(new FrameState().Init(screen));
+			entities.Add().AddComponent(new ScoreState());
 			if ( debug != null ) {
 				entities.Add().AddComponent(new DebugState().Init(debug));
 			}
@@ -168,9 +173,9 @@ namespace ShootGame.Logic {
 			Add(new AddToInventorySystem());
 			Add(GameLogic.Healing);
 			Add(new AddHealthSystem());
-			Add(new ScoreMeasureSystem());
-			Add(new DestroyCollectedItemSystem());
 			Add(new NoHealthDestroySystem());
+			Add(GameLogic.CollectScores);
+			Add(new DestroyCollectedItemSystem());
 			Add(new OutOfBoundsDestroySystem(screen));
 			Add(new DestroyTriggeredDamageSystem());
 			Add(new DestroySystem());

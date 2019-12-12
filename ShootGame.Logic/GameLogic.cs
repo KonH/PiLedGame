@@ -91,6 +91,12 @@ namespace ShootGame.Logic {
 				}
 		));
 
+		public static ISystem[] CollectScores => new ISystem[] {
+			new DestroyUnitScoreSystem(10),
+			new CollectItemScoreSystem(50),
+			new UpdateScoreSystem(),
+		};
+
 		public static void PrepareState(ScreenConfig screen, EntitySet entities) {
 			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Obstacle).AddComponent<RandomSpawnComponent>().Init(2, 5));
 			entities.AddTopLine(screen, (e, x, y) => e.Spawn(x, y, Health).AddComponent<RandomSpawnComponent>().Init(20, 40));

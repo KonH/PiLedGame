@@ -5,10 +5,23 @@ namespace SimpleECS.Core.Components {
 		public double WantedTime;
 		public Color  Color;
 
-		public TrailComponent Init(double wantedTime, Color color) {
+		public void Init(double wantedTime, Color color) {
 			WantedTime = wantedTime;
 			Color      = color;
-			return this;
+		}
+
+		bool Equals(TrailComponent other) {
+			return WantedTime.Equals(other.WantedTime) && Color.Equals(other.Color);
+		}
+
+		public override bool Equals(object obj) {
+			return ReferenceEquals(this, obj) || (obj is TrailComponent other) && Equals(other);
+		}
+
+		public override int GetHashCode() {
+			unchecked {
+				return (WantedTime.GetHashCode() * 397) ^ Color.GetHashCode();
+			}
 		}
 	}
 }

@@ -26,6 +26,24 @@ namespace SimpleECS.Core.Common {
 			return FromArgb((byte)(R * power), (byte)(G * power), (byte)(B * power));
 		}
 
+		public bool Equals(Color other) {
+			return (A == other.A) && (R == other.R) && (G == other.G) && (B == other.B);
+		}
+
+		public override bool Equals(object obj) {
+			return (obj is Color other) && Equals(other);
+		}
+
+		public override int GetHashCode() {
+			unchecked {
+				var hashCode = A.GetHashCode();
+				hashCode = (hashCode * 397) ^ R.GetHashCode();
+				hashCode = (hashCode * 397) ^ G.GetHashCode();
+				hashCode = (hashCode * 397) ^ B.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		public Color ChangeAlpha(int alpha) => FromArgb(alpha, R, G, B);
 
 		public static Color FromArgb(int alpha, int red, int green, int blue) {
