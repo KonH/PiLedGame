@@ -8,8 +8,8 @@ namespace SimpleECS.Core.Entities {
 		CacheScope    _componentCache = null;
 
 		List<Entity> _entities        = null;
-		List<Entity> _newEntities     = new List<Entity>(16);
-		List<Entity> _removedEntities = new List<Entity>(16);
+		List<Entity> _newEntities     = new List<Entity>(32);
+		List<Entity> _removedEntities = new List<Entity>(32);
 
 		internal Cache<Entity> EntityCache    => _entityCache;
 		internal CacheScope    ComponentCache => _componentCache;

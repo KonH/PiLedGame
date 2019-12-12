@@ -6,6 +6,11 @@ namespace SimpleECS.Core.Utils.Caching {
 	public sealed class CacheScope {
 		readonly Dictionary<Type, ICache> _caches = new Dictionary<Type, ICache>();
 
+		public CacheScope() {
+			// Hack
+			ReleaseAll();
+		}
+
 		public CacheScope Init<T>(int capacity = 4) where T : class, new() {
 			_caches[typeof(T)] = new Cache<T>(capacity);
 			return this;

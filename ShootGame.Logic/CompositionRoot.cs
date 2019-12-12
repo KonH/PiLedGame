@@ -51,7 +51,7 @@ namespace ShootGame.Logic {
 		(Cache<Entity> entityCache, CacheScope componentCache, CacheScope getCache) FillCaches() {
 			var entityCache = new Cache<Entity>(128);
 			var componentCache = new CacheScope()
-				.Init<PositionComponent>(256)
+				.Init<PositionComponent>(128)
 				.Init<SpawnComponent>(64)
 				.Init<TimerComponent>(32)
 				.Init<TimerTickEvent>()
@@ -67,7 +67,7 @@ namespace ShootGame.Logic {
 				.Init<AddHealthEvent>()
 				.Init<RandomSpawnComponent>(32)
 				.Init<SolidBodyComponent>(32)
-				.Init<RenderComponent>(32)
+				.Init<RenderComponent>(64)
 				.Init<PlayerComponent>(1)
 				.Init<KeyboardMovementComponent>(1)
 				.Init<InventoryComponent>(1)
@@ -78,7 +78,8 @@ namespace ShootGame.Logic {
 				.Init<OutOfBoundsDestroyComponent>(32)
 				.Init<DamageComponent>(16)
 				.Init<TrailComponent>(16)
-				.Init<AddScoreEvent>(16);
+				.Init<AddScoreEvent>(16)
+				.Init<FadeRenderComponent>(32);
 			var getCache = new CacheScope()
 				.Init<ComponentCollection<InputState>.Enumerator>()
 				.Init<ComponentCollection<FrameState>.Enumerator>()

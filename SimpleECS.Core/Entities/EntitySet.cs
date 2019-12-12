@@ -5,7 +5,7 @@ using SimpleECS.Core.Utils.Caching;
 
 namespace SimpleECS.Core.Entities {
 	public sealed class EntitySet {
-		List<Entity> _entities = new List<Entity>();
+		List<Entity> _entities = new List<Entity>(128);
 		EntityEditor _editor   = new EntityEditor();
 
 		Cache<Entity> _entityCache    = null;
